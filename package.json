@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10"
+  },
+  "name": "galigeo-builder2",
+  "version": "1.0.0",
+  "main": "postcss.config.js",
+  "devDependencies": {},
+  "scripts": {
+    "build-css": "tailwindcss build assets/css/tailwind-source.css -o assets/css/tailwind-output.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

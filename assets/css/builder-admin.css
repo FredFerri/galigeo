@@ -1,0 +1,26 @@
+/* Styles pour l'interface d'administration du builder */
+.builder-metabox {
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+}
+
+.builder-metabox label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.builder-metabox input[type="text"],
+.builder-metabox input[type="url"],
+.builder-metabox textarea {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.builder-metabox h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e5e5e5;
+}

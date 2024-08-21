@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .builder-slider {
+        @apply relative h-96;
+    }
+
+    .slider-item {
+        @apply absolute inset-0 transition-opacity duration-500 ease-in-out;
+    }
+
+    .slider-button {
+        @apply absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300;
+    }
+
+    .video-container {
+        @apply relative pb-9/16;
+    }
+
+    .video-container iframe {
+        @apply absolute top-0 left-0 w-full h-full;
+    }
+}
+
+@layer utilities {
+    .pb-9\/16 {
+        padding-bottom: 56.25%;
+    }
+}
