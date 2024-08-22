@@ -6,15 +6,44 @@ jQuery(document).ready(function($) {
 
     let blockIndex = blocksContainer.children().length;
 
+    // Gestion de l'ajout de block
     addBlockButton.on('click', function(e) {
         e.preventDefault();
         showBlockTypeDialog();
     });
 
+    // Gestion de la suppression de block
     builderContainer.on('click', '.remove-block', function(e) {
         e.preventDefault();
         $(this).closest('.builder-block').remove();
         updateBlockIndexes();
+    });
+
+    // Gestion de l'ajout de slide
+    builderContainer.on('click', '.add-slide', function(e) {
+        e.preventDefault();
+        const sliderContainer = $(this).siblings('.slider-slides');
+        const blockIndex = sliderContainer.data('block-index');
+        const slideCount = sliderContainer.children().length;
+        
+        if (slideCount < 4) {
+            const newSlide = $('#slide-template').html()
+                .replace(/BLOCK_INDEX/g, blockIndex)
+                .replace(/SLIDE_INDEX/g, slideCount);
+            sliderContainer.append(newSlide);
+            updateSlideButtons(sliderContainer);
+            updateSlideNumbers(sliderContainer);
+        }
+    });
+
+    // Gestion de la suppression de slide
+    builderContainer.on('click', '.remove-slide', function(e) {
+        e.preventDefault();
+        const slideContainer = $(this).closest('.slide-fields');
+        const sliderContainer = slideContainer.parent();
+        slideContainer.remove();
+        updateSlideButtons(sliderContainer);
+        updateSlideNumbers(sliderContainer);
     });
 
     function showBlockTypeDialog() {
@@ -25,17 +54,19 @@ jQuery(document).ready(function($) {
                   '<button class="button" data-type="video">Vidéo</button>'
         }).dialog({
             modal: true,
+            closeOnEscape: true,
             buttons: {
                 "Annuler": function() {
                     $(this).dialog('close');
                 }
+            },
+            create: function() {
+                $(this).find('button[data-type]').on('click', function() {
+                    const type = $(this).data('type');
+                    addBlock(type);
+                    dialog.dialog('close');
+                });
             }
-        });
-
-        dialog.find('button[data-type]').on('click', function() {
-            const type = $(this).data('type');
-            addBlock(type);
-            dialog.dialog('close');
         });
     }
 
@@ -48,8 +79,6 @@ jQuery(document).ready(function($) {
                 $(this).attr('name', name.replace('TEMPLATE_INDEX', blockIndex));
             }
         });
-        // Assurez-vous que le champ de type est inclus
-        template.append(`<input type="hidden" name="builder_blocks[${blockIndex}][type]" value="${type}">`);
         blocksContainer.append(template);
         blockIndex++;
         updateBlockIndexes();
@@ -66,4 +95,35 @@ jQuery(document).ready(function($) {
             });
         });
     }
+
+    function updateSlideButtons(sliderContainer) {
+        const slideCount = sliderContainer.children().length;
+        sliderContainer.siblings('.add-slide').prop('disabled', slideCount >= 4);
+        sliderContainer.find('.remove-slide').toggle(slideCount > 1);
+    }
+
+    function updateSlideNumbers(sliderContainer) {
+        sliderContainer.children().each(function(index) {
+            $(this).find('.slide-number').text(index + 1);
+            $(this).find('input, select, textarea').each(function() {
+                const name = $(this).attr('name');
+                if (name) {
+                    $(this).attr('name', name.replace(/\[slides\]\[\d+\]/, '[slides][' + index + ']'));
+                }
+            });
+        });
+    }
+
+    // Gestion du type de background
+    builderContainer.on('change', '.bg-type-select', function() {
+        const bgType = $(this).val();
+        const slideField = $(this).closest('.slide-fields');
+        slideField.find('.bg-color-field').toggle(bgType === 'color');
+        slideField.find('.bg-image-field').toggle(bgType === 'image');
+    });
+
+    // Gestion de l'affichage du bouton
+    builderContainer.on('change', 'input[name$="[show_button]"]', function() {
+        $(this).closest('.slide-fields, .video-block').find('.button-options').toggle(this.checked);
+    });
 });

@@ -1,3 +1,25 @@
+/* Règles générales */
+
+.galigeo-bleu {
+    color: #03234d;
+}
+
+.galigeo-vert {
+    color: #2ec975;
+}
+
+.galigeo-bleu-transp {
+    color: #ebf1f7;
+}
+
+.galigeo-vert-transp {
+    color: #ebfff3;
+}
+
+.compressed-width {
+    max-width: 800px;
+}
+
 /* Styles pour l'affichage front-end du builder */
 .builder-slider {
     position: relative;

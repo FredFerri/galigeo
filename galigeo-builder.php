@@ -11,6 +11,8 @@ if (!defined('ABSPATH')) exit;
 class Mon_Builder_Personnalise {
     public function __construct() {
         add_action('init', array($this, 'init'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
     }
 
     public function init() {
@@ -29,12 +31,24 @@ class Mon_Builder_Personnalise {
     }
 
     public function enqueue_admin_scripts() {
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('wp-color-picker');
+        wp_enqueue_script('jquery-ui-sortable');
+        wp_enqueue_script('jquery-ui-dialog');
+        wp_enqueue_style('wp-jquery-ui-dialog');
+        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-dialog'), '1.0', true);
+        wp_localize_script('builder-admin-js', 'builderData', array(
+            'nonce' => wp_create_nonce('builder_nonce')
+        ));        
+        wp_enqueue_style('builder-tailwind-css', plugin_dir_url(__FILE__) . 'assets/css/tailwind-output.css');
         wp_enqueue_style('builder-admin-css', plugin_dir_url(__FILE__) . 'assets/css/builder-admin.css');
-        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js');
+        // wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery'), '1.0', true);
     }
 
     public function enqueue_frontend_scripts() {
         wp_enqueue_style('builder-tailwind-css', plugin_dir_url(__FILE__) . 'assets/css/tailwind-output.css');
+        wp_enqueue_style('builder-frontend-css', plugin_dir_url(__FILE__) . 'assets/css/builder-frontend.css');
         wp_enqueue_script('builder-frontend-js', plugin_dir_url(__FILE__) . 'assets/js/builder-frontend.js', array('jquery'), '1.0', true);
     }
 }
