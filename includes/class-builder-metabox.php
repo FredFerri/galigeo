@@ -72,10 +72,9 @@ class Builder_Metabox {
                 <div class="bg-white shadow-md rounded-lg p-6 mb-6">
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold mb-4">Configuration du Slider</h3>
-                        <div id="slider-slides" data-block-index="<?php echo $index; ?>">
+                        <div class="slider-slides" data-block-index="<?php echo $index; ?>">
                             <?php
                             $slides = $data['slides'] ?? [[]];
-                            var_dump($slides);
                             foreach ($slides as $slide_index => $slide) {
                                 $this->render_slide_fields($index, $slide_index, $slide);
                             }
@@ -239,9 +238,14 @@ private function render_slide_fields($block_index, $slide_index, $slide_data) {
         if (!isset($_POST['builder_nonce']) || !wp_verify_nonce($_POST['builder_nonce'], 'save_builder_data')) return;
 
         $blocks = isset($_POST['builder_blocks']) ? $_POST['builder_blocks'] : array();
+        // Filtrer les blocs pour exclure ceux avec la clé 'TEMPLATE_INDEX'
+        $filtered_blocks = array_filter($blocks, function($key) {
+            // Exclure les blocs avec la clé 'TEMPLATE_INDEX'
+            return $key !== 'TEMPLATE_INDEX';
+        }, ARRAY_FILTER_USE_KEY);             
         $sanitized_blocks = array();
-
-        foreach ($blocks as $index => $block) {
+        var_dump($filtered_blocks);
+        foreach ($filtered_blocks as $index => $block) {
             if (!isset($block['type'])) {
                 continue; // Ignorer les blocs sans type
             }
@@ -251,10 +255,28 @@ private function render_slide_fields($block_index, $slide_index, $slide_data) {
 
             switch ($type) {
                 case 'slider':
-                    $sanitized_data = array(
-                        'button_text' => isset($data['button_text']) ? sanitize_text_field($data['button_text']) : '',
-                        'button_link' => isset($data['button_link']) ? esc_url_raw($data['button_link']) : ''
-                    );
+                    $sanitized_data = array();
+
+                    if (isset($data['slides']) && is_array($data['slides'])) {
+                        // Boucle sur chaque slide
+                        foreach ($data['slides'] as $slide_index => $slide_data) {
+                            // Traitement des champs du slide
+                            $sanitized_slide = array(
+                                'title'       => isset($slide_data['title']) ? sanitize_text_field($slide_data['title']) : '',
+                                'title_tag'   => isset($slide_data['title_tag']) ? sanitize_text_field($slide_data['title_tag']) : 'h2',
+                                'bg_type'     => isset($slide_data['bg_type']) ? sanitize_text_field($slide_data['bg_type']) : 'color',
+                                'bg_color'    => isset($slide_data['bg_color']) ? sanitize_hex_color($slide_data['bg_color']) : '#ffffff',
+                                'bg_image'    => isset($slide_data['bg_image']) ? esc_url_raw($slide_data['bg_image']) : '',
+                                'show_button' => isset($slide_data['show_button']) ? (bool)$slide_data['show_button'] : false,
+                                'button_text' => isset($slide_data['button_text']) ? sanitize_text_field($slide_data['button_text']) : '',
+                                'button_url'  => isset($slide_data['button_url']) ? esc_url_raw($slide_data['button_url']) : '',
+                                'button_color'=> isset($slide_data['button_color']) ? sanitize_hex_color($slide_data['button_color']) : '#000000',
+                            );
+
+                            // Ajout du slide au tableau final
+                            $sanitized_data['slides'][$slide_index] = $sanitized_slide;
+                        }
+                    }
                     // Gérer les images ici si nécessaire
                     break;
                 case 'video':

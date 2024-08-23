@@ -19,22 +19,60 @@ jQuery(document).ready(function($) {
         updateBlockIndexes();
     });
 
-    // Gestion de l'ajout de slide
+
+    // Gestion de l'ajout de slide avec débogage
     builderContainer.on('click', '.add-slide', function(e) {
         e.preventDefault();
+
         const sliderContainer = $(this).siblings('.slider-slides');
+        console.dir(sliderContainer);
+        if (!sliderContainer.length) {
+            console.error("Slider container (.slider-slides) not found.");
+            return;
+        }
+
         const blockIndex = sliderContainer.data('block-index');
+        if (blockIndex === undefined) {
+            console.error("Block index not found on slider container.");
+            return;
+        }
+
         const slideCount = sliderContainer.children().length;
-        
+        console.dir(sliderContainer);
+        alert(slideCount);
+        console.log("Current slide count:", slideCount);
+
         if (slideCount < 4) {
             const newSlide = $('#slide-template').html()
                 .replace(/BLOCK_INDEX/g, blockIndex)
                 .replace(/SLIDE_INDEX/g, slideCount);
+
+            if (!newSlide) {
+                console.error("Slide template not found or empty.");
+                return;
+            }
+
             sliderContainer.append(newSlide);
+            console.log("New slide added successfully.");
+
             updateSlideButtons(sliderContainer);
             updateSlideNumbers(sliderContainer);
+        } else {
+            console.warn("Slide limit reached (4 slides).");
         }
     });
+
+    // Gestion de la suppression de slide
+    builderContainer.on('click', '.remove-slide', function(e) {
+        e.preventDefault();
+
+        const sliderContainer = $(this).closest('.slider-slides');
+        $(this).closest('.slide').remove();
+
+        updateSlideButtons(sliderContainer);
+        updateSlideNumbers(sliderContainer);
+    });
+
 
     // Gestion de la suppression de slide
     builderContainer.on('click', '.remove-slide', function(e) {
