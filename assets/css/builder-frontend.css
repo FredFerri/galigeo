@@ -20,38 +20,8 @@
     max-width: 800px;
 }
 
-/* Styles pour l'affichage front-end du builder */
-.builder-slider {
-    position: relative;
-    margin-bottom: 30px;
-}
+/* Video block */
 
-.slider-container {
-    position: relative;
-    overflow: hidden;
-}
-
-.slider-item {
-    display: none;
-}
-
-.slider-item:first-child {
-    display: block;
-}
-
-.slider-item img {
-    width: 100%;
-    height: auto;
-}
-
-.slider-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #0073aa;
-    color: #fff;
-    text-decoration: none;
-    margin-top: 10px;
-}
 
 .builder-video {
     margin-bottom: 30px;
@@ -79,3 +49,88 @@
 .video-description {
     margin-top: 10px;
 }
+
+/* Slider block */
+
+.galigeo-slider-wrapper {
+    max-width: 1600px;
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0 10%;
+}
+
+.galigeo-slider {
+    position: relative;
+    overflow: visible;
+    height: 400px; /* Ajustez selon vos besoins */
+}
+
+.galigeo-slider-container {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+}
+
+.galigeo-slide {
+    flex: 0 0 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    margin: 0 2%;
+    border-radius: 10px;
+    transform: scale(0.9);
+    transition: transform 0.5s ease;
+}
+
+.galigeo-slide.active {
+    transform: scale(1);
+}
+
+.galigeo-slide-content {
+    max-width: 50%;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.galigeo-slide-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.galigeo-slide-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+}
+
+.galigeo-slide-button:hover {
+    opacity: 0.9;
+}
+
+.galigeo-slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.5);
+    border: none;
+    font-size: 1.5rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    z-index: 10;
+}
+
+.galigeo-slider-nav:hover {
+    background: rgba(255,255,255,0.8);
+}
+
+.galigeo-slider-prev { left: -5%; }
+.galigeo-slider-next { right: -5%; }

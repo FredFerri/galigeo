@@ -16,7 +16,6 @@ class Builder_Frontend {
     private function get_builder_content($post_id) {
         $blocks = get_post_meta($post_id, '_builder_blocks', true);
         $output = '';
-
         if (!empty($blocks)) {
             foreach ($blocks as $block) {
                 $type = $block['type'];
@@ -32,41 +31,44 @@ class Builder_Frontend {
                 }
             }
         }
-
         return $output;
     }
 
-    private function render_slider($data) {
-        $output = '';
-        $images = $data['images'] ?? [];
-        $button_text = $data['button_text'] ?? '';
-        $button_link = $data['button_link'] ?? '';
+private function render_slider($data) {
+    $slides = $data['slides'] ?? [];
+    if (count($slides) < 2) return '';
 
-        if (!empty($images)) {
-            $output .= '<div class="builder-slider relative mb-8 h-96">';
-            $output .= '<div class="slider-container overflow-hidden h-full">';
-            foreach ($images as $key => $image_id) {
-                $image_url = wp_get_attachment_image_url($image_id, 'full');
-                $image_alt = get_post_meta($image_id, '_wp_attachment_image_alt', true);
-                $output .= '<div class="slider-item absolute inset-0 transition-opacity duration-500 ease-in-out ' . ($key === 0 ? 'opacity-100' : 'opacity-0') . '">';
-                $output .= '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($image_alt) . '" class="w-full h-full object-cover">';
-                $output .= '</div>';
-            }
-            $output .= '</div>';
-            if ($button_text && $button_link) {
-                $output .= '<a href="' . esc_url($button_link) . '" class="slider-button absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300">' . esc_html($button_text) . '</a>';
-            }
-            $output .= '<button class="prev-slide absolute top-1/2 left-4 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            </button>';
-            $output .= '<button class="next-slide absolute top-1/2 right-4 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </button>';
-            $output .= '</div>';
+    $output = '<div class="galigeo-slider-wrapper">';
+    $output .= '<div class="galigeo-slider" style="--slide-count: ' . count($slides) . ';">';
+    $output .= '<div class="galigeo-slider-container">';
+
+    foreach ($slides as $index => $slide) {
+        $bg_type = $slide['bg_type'] ?? 'color';
+        $bg_value = $bg_type === 'color' ? ($slide['bg_color'] ?? '#ffffff') : ($slide['bg_image'] ?? '');
+        $title = $slide['title'] ?? '';
+        $title_tag = $slide['title_tag'] ?? 'h2';
+        $button_text = $slide['button_text'] ?? '';
+        $button_url = $slide['button_url'] ?? '';
+        $button_color = $slide['button_color'] ?? '#000000';
+
+        $output .= '<div class="galigeo-slide" data-index="' . $index . '" style="' . ($bg_type === 'color' ? "background-color: $bg_value;" : "background-image: url('$bg_value');") . '">';
+        $output .= '<div class="galigeo-slide-content">';
+        if ($title) {
+            $output .= "<$title_tag class='galigeo-slide-title'>" . esc_html($title) . "</$title_tag>";
         }
-
-        return $output;
+        if ($button_text && $button_url) {
+            $output .= '<a href="' . esc_url($button_url) . '" class="galigeo-slide-button" style="background-color: ' . esc_attr($button_color) . ';">' . esc_html($button_text) . '</a>';
+        }
+        $output .= '</div></div>';
     }
+
+    $output .= '</div>';
+    $output .= '<button class="galigeo-slider-nav galigeo-slider-prev">&larr;</button>';
+    $output .= '<button class="galigeo-slider-nav galigeo-slider-next">&rarr;</button>';
+    $output .= '</div></div>';
+
+    return $output;
+}
 
     private function render_video($data) {
         $output = '';

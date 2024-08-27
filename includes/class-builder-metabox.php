@@ -244,7 +244,6 @@ private function render_slide_fields($block_index, $slide_index, $slide_data) {
             return $key !== 'TEMPLATE_INDEX';
         }, ARRAY_FILTER_USE_KEY);             
         $sanitized_blocks = array();
-        var_dump($filtered_blocks);
         foreach ($filtered_blocks as $index => $block) {
             if (!isset($block['type'])) {
                 continue; // Ignorer les blocs sans type
@@ -255,30 +254,45 @@ private function render_slide_fields($block_index, $slide_index, $slide_data) {
 
             switch ($type) {
                 case 'slider':
-                    $sanitized_data = array();
+                $sanitized_data = array();
 
-                    if (isset($data['slides']) && is_array($data['slides'])) {
-                        // Boucle sur chaque slide
-                        foreach ($data['slides'] as $slide_index => $slide_data) {
-                            // Traitement des champs du slide
-                            $sanitized_slide = array(
-                                'title'       => isset($slide_data['title']) ? sanitize_text_field($slide_data['title']) : '',
-                                'title_tag'   => isset($slide_data['title_tag']) ? sanitize_text_field($slide_data['title_tag']) : 'h2',
-                                'bg_type'     => isset($slide_data['bg_type']) ? sanitize_text_field($slide_data['bg_type']) : 'color',
-                                'bg_color'    => isset($slide_data['bg_color']) ? sanitize_hex_color($slide_data['bg_color']) : '#ffffff',
-                                'bg_image'    => isset($slide_data['bg_image']) ? esc_url_raw($slide_data['bg_image']) : '',
-                                'show_button' => isset($slide_data['show_button']) ? (bool)$slide_data['show_button'] : false,
-                                'button_text' => isset($slide_data['button_text']) ? sanitize_text_field($slide_data['button_text']) : '',
-                                'button_url'  => isset($slide_data['button_url']) ? esc_url_raw($slide_data['button_url']) : '',
-                                'button_color'=> isset($slide_data['button_color']) ? sanitize_hex_color($slide_data['button_color']) : '#000000',
-                            );
+                if (isset($data['slides']) && is_array($data['slides'])) {
+                    foreach ($data['slides'] as $slide_index => $slide_data) {
+                        $sanitized_slide = array(
+                            'title'       => isset($slide_data['title']) ? sanitize_text_field($slide_data['title']) : '',
+                            'title_tag'   => isset($slide_data['title_tag']) ? sanitize_text_field($slide_data['title_tag']) : 'h2',
+                            'bg_type'     => isset($slide_data['bg_type']) ? sanitize_text_field($slide_data['bg_type']) : 'color',
+                            'bg_color'    => isset($slide_data['bg_color']) ? sanitize_hex_color($slide_data['bg_color']) : '#ffffff',
+                            'show_button' => isset($slide_data['show_button']) ? (bool)$slide_data['show_button'] : false,
+                            'button_text' => isset($slide_data['button_text']) ? sanitize_text_field($slide_data['button_text']) : '',
+                            'button_url'  => isset($slide_data['button_url']) ? esc_url_raw($slide_data['button_url']) : '',
+                            'button_color'=> isset($slide_data['button_color']) ? sanitize_hex_color($slide_data['button_color']) : '#000000',
+                        );
 
-                            // Ajout du slide au tableau final
-                            $sanitized_data['slides'][$slide_index] = $sanitized_slide;
+                        // Gestion de l'image de background
+                        if ($slide_data['bg_type'] === 'image') {
+                            if (!empty($_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['bg_image'])) {
+                                $file = array(
+                                    'name'     => $_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['bg_image'],
+                                    'type'     => $_FILES['builder_blocks']['type'][$index]['data']['slides'][$slide_index]['bg_image'],
+                                    'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['slides'][$slide_index]['bg_image'],
+                                    'error'    => $_FILES['builder_blocks']['error'][$index]['data']['slides'][$slide_index]['bg_image'],
+                                    'size'     => $_FILES['builder_blocks']['size'][$index]['data']['slides'][$slide_index]['bg_image']
+                                );
+                                $upload = $this->handle_image_upload($file, $post_id);
+                                if ($upload && !is_wp_error($upload)) {
+                                    $sanitized_slide['bg_image'] = $upload['url'];
+                                }
+                            } elseif (!empty($slide_data['bg_image'])) {
+                                // Conserver l'image existante si aucune nouvelle image n'a été uploadée
+                                $sanitized_slide['bg_image'] = esc_url_raw($slide_data['bg_image']);
+                            }
                         }
+
+                        $sanitized_data['slides'][$slide_index] = $sanitized_slide;
                     }
-                    // Gérer les images ici si nécessaire
-                    break;
+                }
+                break;
                 case 'video':
                     $sanitized_data = array(
                         'url' => isset($data['url']) ? esc_url_raw($data['url']) : '',
@@ -303,6 +317,42 @@ private function render_slide_fields($block_index, $slide_index, $slide_data) {
 
         update_post_meta($post_id, '_builder_blocks', $sanitized_blocks);
     }
+
+    private function handle_image_upload($file, $post_id) {
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+        $upload_overrides = array('test_form' => false);
+        $uploaded_file = wp_handle_upload($file, $upload_overrides);
+
+        if ($uploaded_file && !isset($uploaded_file['error'])) {
+            $file_name = basename($file['name']);
+            $file_type = wp_check_filetype($file_name);
+
+            $attachment_data = array(
+                'post_mime_type' => $file_type['type'],
+                'post_title'     => preg_replace('/\.[^.]+$/', '', $file_name),
+                'post_content'   => '',
+                'post_status'    => 'inherit'
+            );
+
+            $attachment_id = wp_insert_attachment($attachment_data, $uploaded_file['file'], $post_id);
+
+            if (!is_wp_error($attachment_id)) {
+                $attachment_metadata = wp_generate_attachment_metadata($attachment_id, $uploaded_file['file']);
+                wp_update_attachment_metadata($attachment_id, $attachment_metadata);
+
+                return array(
+                    'id'  => $attachment_id,
+                    'url' => $uploaded_file['url']
+                );
+            }
+        }
+
+        return false;
+    }
+
 }
 
 new Builder_Metabox();
