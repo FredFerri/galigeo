@@ -8,7 +8,7 @@ Author: Frédéric Ferri
 
 if (!defined('ABSPATH')) exit;
 
-class Mon_Builder_Personnalise {
+class Galigeo_Builder {
     public function __construct() {
         add_action('init', array($this, 'init'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -36,13 +36,15 @@ class Mon_Builder_Personnalise {
         wp_enqueue_script('jquery-ui-sortable');
         wp_enqueue_script('jquery-ui-dialog');
         wp_enqueue_style('wp-jquery-ui-dialog');
-        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-dialog'), '1.0', true);
+        wp_enqueue_style('builder-tailwind-css', plugin_dir_url(__FILE__) . 'assets/css/tailwind-output.css');
+        wp_enqueue_style('builder-admin-css', plugin_dir_url(__FILE__) . 'assets/css/builder-admin.css');
+        wp_enqueue_script('builder-admin-slider-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin_slider.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('builder-admin-video-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin_video.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('builder-admin-cta-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin_cta.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-dialog', 'builder-admin-slider-js', 'builder-admin-cta-js', 'builder-admin-video-js'), '1.0', true);
         wp_localize_script('builder-admin-js', 'builderData', array(
             'nonce' => wp_create_nonce('builder_nonce')
         ));        
-        wp_enqueue_style('builder-tailwind-css', plugin_dir_url(__FILE__) . 'assets/css/tailwind-output.css');
-        wp_enqueue_style('builder-admin-css', plugin_dir_url(__FILE__) . 'assets/css/builder-admin.css');
-        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js');
         // wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery'), '1.0', true);
     }
 
@@ -57,7 +59,7 @@ add_action('wp_ajax_get_block_html', 'get_block_html_ajax');
 
 
 
-$mon_builder_personnalise = new Mon_Builder_Personnalise();
+$Galigeo_Builder = new Galigeo_Builder();
 
 // Fonction pour gérer la requête AJAX
 function get_block_html_ajax() {
