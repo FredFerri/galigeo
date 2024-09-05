@@ -1,5 +1,4 @@
 function admin_video_scripts() {
-    alert('video');
     // Gérer l'affichage/masquage des options du bouton
     jQuery(document).on('change', '.show_button_checkbox', function() {
         var index = jQuery(this).data('index');

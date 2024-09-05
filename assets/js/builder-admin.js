@@ -25,7 +25,8 @@ jQuery(document).ready(function($) {
             html: '<p>Sélectionnez le type de block à ajouter :</p>' +
                   '<button class="button" data-type="slider">Slider</button> ' +
                   '<button class="button" data-type="video">Vidéo</button>' +
-                  '<button class="button" data-type="call_to_action">Call to action</button>'
+                  '<button class="button" data-type="call_to_action">Call to action</button>' +
+                  '<button class="button" data-type="alternate_visual">Visuel alterné</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,
@@ -81,6 +82,10 @@ jQuery(document).ready(function($) {
 
     if (typeof admin_video_scripts === 'function') {
         admin_video_scripts();
-    }       
+    }    
+
+    if (typeof admin_alternate_visual_scripts === 'function') {
+        admin_alternate_visual_scripts($, builderContainer);
+    }          
 
 });
