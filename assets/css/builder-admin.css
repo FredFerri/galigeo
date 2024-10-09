@@ -39,3 +39,14 @@
 .remove-block {
     margin: 15px 0 !important;
 }
+
+.lc_logos_block {
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+    align-items: start;
+}
+
+.lc_logos_block img {
+    width: 140px;
+}

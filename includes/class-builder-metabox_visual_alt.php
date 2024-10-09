@@ -7,9 +7,11 @@ class Alternate_Visual_Block {
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Uploader un fichier (image, vidéo, GIF) :</label>
                 <input type="file" name="builder_blocks[<?php echo $index; ?>][data][av_file]" accept="image/*,video/*,.gif" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                <?php if (!empty($data['av_file'])) : ?>
+                <!-- Champ caché pour conserver l'URL de l'image existante -->
+                <?php if (!empty($slide_data['av_file'])) : ?>
+                    <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][av_file_existing]" value="<?php echo esc_url($slide_data['av_file']); ?>">
                     <img src="<?php echo esc_url($data['av_file']); ?>" alt="Fichier actuel" class="mt-2 max-w-xs">
-                <?php endif; ?>
+                <?php endif; ?>                
             </div>
 
             <!-- Titre -->
@@ -74,9 +76,11 @@ class Alternate_Visual_Block {
             <div class="mb-4 av_bg-image-field <?php echo ($data['av_background_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
                 <input type="file" name="builder_blocks[<?php echo $index; ?>][data][av_background_value]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <?php if (!empty($data['av_background_value']) && $data['av_background_type'] === 'image') : ?>
-                    <img src="<?php echo esc_url($data['av_background_value']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
-                <?php endif; ?>
+                <!-- Champ caché pour conserver l'URL de l'image existante -->
+                <?php if (!empty($slide_data['av_background_value'])) : ?>
+                    <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][av_background_value_existing]" value="<?php echo esc_url($slide_data['av_background_value']); ?>">
+                    <img src="<?php echo esc_url($slide_data['av_background_value']); ?>" alt="Image de background" class="mt-2 max-w-xs">
+                <?php endif; ?>                
             </div>
 
             <!-- Affichage du bouton -->

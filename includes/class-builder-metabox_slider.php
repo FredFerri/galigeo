@@ -74,8 +74,10 @@ class Slider_Block {
             <div class="mb-4 bg-image-field <?php echo ($slide_data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
                 <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                <!-- Champ caché pour conserver l'URL de l'image existante -->
                 <?php if (!empty($slide_data['bg_image'])) : ?>
-                    <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
+                    <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
+                    <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Image de background" class="mt-2 max-w-xs">
                 <?php endif; ?>
             </div>
 
@@ -113,6 +115,9 @@ class Slider_Block {
     public function sanitize($data, $post_id, $index) {
         $sanitized_data = array();
 
+        // var_dump($data);
+        // die();
+
         if (isset($data['slides']) && is_array($data['slides'])) {
             foreach ($data['slides'] as $slide_index => $slide_data) {
                 $sanitized_slide = array(
@@ -140,9 +145,9 @@ class Slider_Block {
                         if ($upload && !is_wp_error($upload)) {
                             $sanitized_slide['bg_image'] = $upload['url'];
                         }
-                    } elseif (!empty($slide_data['bg_image'])) {
+                    } elseif (!empty($slide_data['bg_image_existing'])) {
                         // Conserver l'image existante si aucune nouvelle image n'a été uploadée
-                        $sanitized_slide['bg_image'] = esc_url_raw($slide_data['bg_image']);
+                        $sanitized_slide['bg_image'] = esc_url_raw($slide_data['bg_image_existing']);
                     }
                 }
 

@@ -23,10 +23,12 @@ jQuery(document).ready(function($) {
         const dialog = $('<div>', {
             title: 'Choisir le type de block',
             html: '<p>Sélectionnez le type de block à ajouter :</p>' +
+                  '<button class="button" data-type="slider_home">Home Slider</button> ' +
                   '<button class="button" data-type="slider">Slider</button> ' +
                   '<button class="button" data-type="video">Vidéo</button>' +
                   '<button class="button" data-type="call_to_action">Call to action</button>' +
-                  '<button class="button" data-type="alternate_visual">Visuel alterné</button>'
+                  '<button class="button" data-type="alternate_visual">Visuel alterné</button>' +
+                  '<button class="button" data-type="logos_carousel">Carousel logos</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,
@@ -72,6 +74,10 @@ jQuery(document).ready(function($) {
     } 
 
     // On vérifie si les fonctions existent avant de les appeler
+    if (typeof admin_slider_home_scripts === 'function') {
+        admin_slider_home_scripts($, builderContainer);
+    } 
+
     if (typeof admin_slider_scripts === 'function') {
         admin_slider_scripts($, builderContainer);
     }       
@@ -86,6 +92,11 @@ jQuery(document).ready(function($) {
 
     if (typeof admin_alternate_visual_scripts === 'function') {
         admin_alternate_visual_scripts($, builderContainer);
-    }          
+    }    
+
+    if (typeof admin_logos_carousel_scripts === 'function') {
+        admin_logos_carousel_scripts($, builderContainer);
+    }           
 
 });
+

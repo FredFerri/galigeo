@@ -11,14 +11,16 @@ function admin_slider_scripts($, builderContainer) {
         }
 
         const blockIndex = sliderContainer.data('block-index');
+        alert(blockIndex);
         if (blockIndex === undefined) {
             console.error("Block index not found on slider container.");
             return;
         }
 
         const slideCount = sliderContainer.children().length;
-        console.dir(sliderContainer);
         alert(slideCount);
+        console.dir(sliderContainer);
+        // alert(slideCount);
         console.log("Current slide count:", slideCount);
 
         if (slideCount < 4) {

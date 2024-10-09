@@ -134,3 +134,127 @@
 
 .galigeo-slider-prev { left: -5%; }
 .galigeo-slider-next { right: -5%; }
+
+
+
+/* Slider Home */
+
+.galigeo-slider-home-wrapper {
+    max-width: 1600px;
+    width: 80%;
+    margin: 70px auto;
+    overflow: hidden;
+    padding: 0;
+}
+
+.galigeo-slider-home {
+    position: relative;
+    overflow: hidden;
+}
+
+.galigeo-slider-home-container {
+    display: flex;
+    transition: transform 0.5s ease;
+    height: 100%;
+}
+
+.galigeo-slide-home {
+    flex: 0 0 100%; /* Le slide actif prend toute la largeur */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.5s ease;
+}
+
+.galigeo-slide-home.active {
+    transform: translateX(0); /* Slide actif visible */
+}
+
+.galigeo-slide-home-content {
+    max-width: 70%;
+    color: white;
+    text-align: center;
+}
+
+.galigeo-slide-home-title {
+    font-family: Literata;
+    color: #03234D;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.galigeo-slide-home-subtitle {
+    font-family: Literata;
+    font-size: 1rem;
+    color: #5C5C5C;
+    margin-bottom: 1.5rem;
+}
+
+.galigeo-slide-home-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.7rem;
+    text-decoration: none;
+    color: white;
+    font-family: Montserrat;
+    font-size: 0.938rem;
+    background-color: #03234D !important;
+    transition: opacity 0.3s ease;
+}
+
+.galigeo-slide-home-button:hover {
+    opacity: 0.9;
+}
+
+.galigeo-slide-home-image {
+    margin-top: 2rem;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Boutons de navigation à l'intérieur du slide */
+.galigeo-slider-home-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    color: #2ECC71;
+    font-size: 2rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    z-index: 10;
+}
+
+.galigeo-slider-home-nav:hover {
+    background: white;
+}
+
+.galigeo-slider-home-prev {
+    left: 10px; /* Bouton précédent à gauche */
+}
+
+.galigeo-slider-home-next {
+    right: 10px; /* Bouton suivant à droite */
+}
+
+/* Cacher les boutons et arrêter le slider si un seul slide */
+.galigeo-slider-single-home .galigeo-slider-home-nav {
+    display: none;
+}
+
+.galigeo-slide-home-extra-image {
+    display: block;
+    margin: 2rem auto 0;
+    height: 30rem;
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}

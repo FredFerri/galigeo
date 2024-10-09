@@ -1,8 +1,10 @@
 <?php
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_slider.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_slider_home.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_video.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_cta.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_visual_alt.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_logos.php';
 
 class Builder_Metabox {
     private $blocks;
@@ -10,9 +12,11 @@ class Builder_Metabox {
     public function __construct() {
         $this->blocks = [
             'slider' => new Slider_Block(),
+            'slider_home' => new Slider_Home_Block(),
             'video' => new Video_Block(),
             'call_to_action' => new Call_To_Action_Block(),
             'alternate_visual' => new Alternate_Visual_Block(),
+            'logos_carousel' => new Client_Carousel_Block(),
         ];
 
         add_action('add_meta_boxes', array($this, 'add_meta_box'));
@@ -49,6 +53,7 @@ class Builder_Metabox {
                 <?php
                 if (!empty($blocks)) {
                     foreach ($blocks as $index => $block) {
+                        // print_r($block);
                         $this->render_block($block, $index);
                     }
                 }
@@ -94,6 +99,8 @@ public function save_metabox($post_id) {
     $blocks = isset($_POST['builder_blocks']) ? $_POST['builder_blocks'] : array();
     // var_dump($blocks);
     $sanitized_blocks = array();
+
+    // var_dump($blocks);
 
     // Boucle sur les blocs soumis
     foreach ($blocks as $index => $block) {
