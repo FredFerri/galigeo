@@ -12,12 +12,12 @@ jQuery(document).ready(function($) {
         showBlockTypeDialog();
     });
 
-    // Gestion de la suppression de block
-    builderContainer.on('click', '.remove-block', function(e) {
-        e.preventDefault();
-        $(this).closest('.builder-block').remove();
-        updateBlockIndexes();
-    });
+    // // Gestion de la suppression de block
+    // builderContainer.on('click', '.remove-block', function(e) {
+    //     e.preventDefault();
+    //     $(this).closest('.builder-block').remove();
+    //     updateBlockIndexes();
+    // });
 
     function showBlockTypeDialog() {
         const dialog = $('<div>', {
@@ -100,3 +100,31 @@ jQuery(document).ready(function($) {
 
 });
 
+/* Gestion de la modal de confirmation de suppression d'un block */
+    let deleteButton = null;  // Bouton de suppression qui déclenche la modale
+    // Clic sur un bouton de suppression
+    document.querySelectorAll('.remove-block').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            deleteButton = this;  // Stocker le bouton de suppression qui a été cliqué
+            document.getElementById('confirm-delete-modal').classList.remove('hidden');  // Afficher la modale
+        });
+    });
+
+    // Annuler la suppression
+    document.getElementById('cancel-delete').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.getElementById('confirm-delete-modal').classList.add('hidden');
+        deleteButton = null;  // Réinitialiser le bouton stocké
+    });
+
+    // Confirmer la suppression
+    document.getElementById('confirm-delete').addEventListener('click', function (e) {
+        if (deleteButton) {
+            e.preventDefault();
+            const blockToDelete = deleteButton.closest('.builder-block');  // Trouver le block à supprimer
+            blockToDelete.remove();  // Supprimer le block
+            document.getElementById('confirm-delete-modal').classList.add('hidden');  // Masquer la modale
+            deleteButton = null;  // Réinitialiser le bouton stocké
+        }
+    });

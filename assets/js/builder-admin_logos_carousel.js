@@ -8,14 +8,10 @@ function admin_logos_carousel_scripts($, builderContainer) {
     });
 
 	/* Gestion de la suppression dynamique des logos */
-
-	alert('ok');
-
     const removeLogoButtons = document.querySelectorAll('.lc-remove-logo');
 
     removeLogoButtons.forEach(button => {
         button.addEventListener('click', function () {
-        	alert("zz");
             const logoContainer = this.closest('.relative');
             const logoIndex = this.getAttribute('data-logo-index');
 
