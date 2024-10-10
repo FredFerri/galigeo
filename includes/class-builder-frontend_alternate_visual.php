@@ -1,7 +1,6 @@
 <?php
 class Alternate_Visual_Block_Frontend {
     public function render($data) {
-        var_dump($data);
         // Récupération des données enregistrées dans le backend
         $title = $data['av_title'] ?? '';
         $title_tag = $data['av_title_tag'] ?? 'h2';
@@ -12,7 +11,8 @@ class Alternate_Visual_Block_Frontend {
         $background_type = $data['av_background_type'] ?? 'color';
         $background_value = $background_type === 'color' ? ($data['av_background_value'] ?? '#ffffff') : ($data['av_background_value'] ?? '');
         $file_url = $data['av_file'] ?? '';
-        $position = $data['av_position'] ?? 'left';
+        $image_url = $data['av_inner_image'] ?? ''; // Nouvelle image à l'intérieur du bloc
+        $image_alignment = $data['av_image_alignment'] ?? 'left'; // Nouvel alignement de l'image
         $show_button = $data['av_show_button'] ?? false;
         $button_text = $data['av_button_text'] ?? '';
         $button_url = $data['av_button_link'] ?? '#';
@@ -23,23 +23,22 @@ class Alternate_Visual_Block_Frontend {
             ? "background-color: $background_value;"
             : "background-image: url('$background_value'); background-size: cover; background-position: center;";
 
+        // Détermine l'ordre des blocs (image à gauche ou à droite)
+        $order_classes = $image_alignment === 'right' ? 'flex-row-reverse' : 'flex-row';
+
         // Container principal avec le background
         $output = '<div class="av_alternate_visual_block py-16 my-12" style="' . esc_attr($background_style) . '">';
-        $output .= '<div class="container mx-auto px-4 flex space-around items-center">';
+        $output .= '<div class="container mx-auto px-4 flex ' . esc_attr($order_classes) . ' items-center">';
 
-        // Bloc de gauche (image/vidéo/GIF)
-        if ($file_url) {
-            $output .= '<div class="av_left_block w-1/2">';
-            if (preg_match('/\.(mp4|webm)$/', $file_url)) {
-                $output .= '<video class="w-full h-auto" controls><source src="' . esc_url($file_url) . '" type="video/mp4"></video>';
-            } else {
-                $output .= '<img src="' . esc_url($file_url) . '" alt="Media" class="w-full h-auto av_media">';
-            }
+        // Bloc d'image à l'intérieur (nouvelle image ajoutée)
+        if ($image_url) {
+            $output .= '<div class="av_image_block w-1/2 flex items-center justify-center">';
+            $output .= '<img src="' . esc_url($image_url) . '" alt="Image" class="max-w-full max-h-full object-contain">';
             $output .= '</div>';
         }
 
-        // Bloc de droite (texte et bouton)
-        $output .= '<div class="av_right_block w-1/2 flex flex-col items-start space-y-5">';
+        // Bloc de texte
+        $output .= '<div class="av_text_block w-1/2 flex flex-col items-start space-y-5">';
 
         // Titre
         if ($title) {
@@ -61,9 +60,9 @@ class Alternate_Visual_Block_Frontend {
             $output .= '<a href="' . esc_url($button_url) . '" class="av_button px-6 py-3 rounded-lg text-white font-semibold" style="background-color: ' . esc_attr($button_color) . '; padding: 12px; border-radius: 10px;">' . esc_html($button_text) . '</a>';
         }
 
-        $output .= '</div>'; // Fermeture du bloc de droite
-        $output .= '</div>'; // Fermeture du container principal
+        $output .= '</div>'; // Fermeture du bloc de texte
         $output .= '</div>'; // Fermeture du container flex
+        $output .= '</div>'; // Fermeture du container principal
 
         return $output;
     }

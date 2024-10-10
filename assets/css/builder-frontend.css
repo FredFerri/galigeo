@@ -258,3 +258,16 @@
     object-fit: cover;
     border-radius: 10px;
 }
+
+/* Alternate visual */
+
+.av_alternate_visual_block {
+    max-width: 1800px;
+    margin: 30px auto;
+    width: 80%;
+    border-radius: 1em;
+}
+
+.av_alternate_visual_block > .container {
+    gap: 4em;
+}

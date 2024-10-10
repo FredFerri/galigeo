@@ -12,4 +12,23 @@ function admin_alternate_visual_scripts($, builderContainer) {
         $(this).parent().parent().next('.av_button-options').toggleClass('hidden');
 
     });    
+
+    /* Gestion de la suppression dynamique des images */
+    const removeImgButtons = document.querySelectorAll('.alt-remove-img');
+
+    removeImgButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const ImgContainer = this.closest('.relative');
+            const ImgIndex = this.getAttribute('data-img-index');
+
+            // Masquer l'image et le bouton
+            ImgContainer.style.display = 'none';
+
+            // Désactiver l'input correspondant pour qu'il ne soit pas envoyé dans le formulaire
+            const hiddenInput = ImgContainer.querySelector('input[type="hidden"]');
+            if (hiddenInput) {
+                hiddenInput.disabled = true;
+            }
+        });
+    });    
 }    
