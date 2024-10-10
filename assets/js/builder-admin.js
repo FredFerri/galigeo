@@ -1,8 +1,8 @@
 jQuery(document).ready(function($) {
-    const builderContainer = $('#builder-container');
-    const blocksContainer = $('#builder-blocks');
-    const addBlockButton = $('#add-block');
-    const blockTemplates = $('#block-templates');
+    const builderContainer = jQuery('#builder-container');
+    const blocksContainer = jQuery('#builder-blocks');
+    const addBlockButton = jQuery('#add-block');
+    const blockTemplates = jQuery('#block-templates');
 
     let blockIndex = blocksContainer.children().length;
 
@@ -15,12 +15,12 @@ jQuery(document).ready(function($) {
     // // Gestion de la suppression de block
     // builderContainer.on('click', '.remove-block', function(e) {
     //     e.preventDefault();
-    //     $(this).closest('.builder-block').remove();
+    //     jQuery(this).closest('.builder-block').remove();
     //     updateBlockIndexes();
     // });
 
     function showBlockTypeDialog() {
-        const dialog = $('<div>', {
+        const dialog = jQuery('<div>', {
             title: 'Choisir le type de block',
             html: '<p>Sélectionnez le type de block à ajouter :</p>' +
                   '<button class="button" data-type="slider_home">Home Slider</button> ' +
@@ -34,12 +34,12 @@ jQuery(document).ready(function($) {
             closeOnEscape: true,
             buttons: {
                 "Annuler": function() {
-                    $(this).dialog('close');
+                    jQuery(this).dialog('close');
                 }
             },
             create: function() {
-                $(this).find('button[data-type]').on('click', function() {
-                    const type = $(this).data('type');
+                jQuery(this).find('button[data-type]').on('click', function() {
+                    const type = jQuery(this).data('type');
                     addBlock(type);
                     dialog.dialog('close');
                 });
@@ -51,9 +51,9 @@ jQuery(document).ready(function($) {
         const template = blockTemplates.find(`.builder-block[data-type="${type}"]`).clone();
         template.attr('data-index', blockIndex);
         template.find('input, textarea, select').each(function() {
-            const name = $(this).attr('name');
+            const name = jQuery(this).attr('name');
             if (name) {
-                $(this).attr('name', name.replace('TEMPLATE_INDEX', blockIndex));
+                jQuery(this).attr('name', name.replace('TEMPLATE_INDEX', blockIndex));
             }
         });
         blocksContainer.append(template);
@@ -63,11 +63,11 @@ jQuery(document).ready(function($) {
 
     function updateBlockIndexes() {
         blocksContainer.children('.builder-block').each(function(index) {
-            $(this).attr('data-index', index);
-            $(this).find('input, textarea, select').each(function() {
-                const name = $(this).attr('name');
+            jQuery(this).attr('data-index', index);
+            jQuery(this).find('input, textarea, select').each(function() {
+                const name = jQuery(this).attr('name');
                 if (name) {
-                    $(this).attr('name', name.replace(/\[(\d+)\]/, '[' + index + ']'));
+                    jQuery(this).attr('name', name.replace(/\[(\d+)\]/, '[' + index + ']'));
                 }
             });
         });
@@ -101,30 +101,23 @@ jQuery(document).ready(function($) {
 });
 
 /* Gestion de la modal de confirmation de suppression d'un block */
-    let deleteButton = null;  // Bouton de suppression qui déclenche la modale
-    // Clic sur un bouton de suppression
-    document.querySelectorAll('.remove-block').forEach(function (button) {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            deleteButton = this;  // Stocker le bouton de suppression qui a été cliqué
-            document.getElementById('confirm-delete-modal').classList.remove('hidden');  // Afficher la modale
-        });
-    });
+jQuery(document).on('click', '.remove-block', function (e) {
+    e.preventDefault();
+    var blockToRemove = jQuery(this).closest('.builder-block');
+    
+    // Affiche la modale en modifiant la propriété display
+    jQuery('#confirm-delete-modal').css('display', 'flex');
 
-    // Annuler la suppression
-    document.getElementById('cancel-delete').addEventListener('click', function (e) {
+    // Gérer le click sur le bouton "Supprimer" dans la modale
+    jQuery('#confirm-delete').off('click').on('click', function (e) {
         e.preventDefault();
-        document.getElementById('confirm-delete-modal').classList.add('hidden');
-        deleteButton = null;  // Réinitialiser le bouton stocké
+        blockToRemove.remove();
+        jQuery('#confirm-delete-modal').css('display', 'none');
     });
 
-    // Confirmer la suppression
-    document.getElementById('confirm-delete').addEventListener('click', function (e) {
-        if (deleteButton) {
-            e.preventDefault();
-            const blockToDelete = deleteButton.closest('.builder-block');  // Trouver le block à supprimer
-            blockToDelete.remove();  // Supprimer le block
-            document.getElementById('confirm-delete-modal').classList.add('hidden');  // Masquer la modale
-            deleteButton = null;  // Réinitialiser le bouton stocké
-        }
+    // Gérer le click sur le bouton "Annuler" dans la modale
+    jQuery('#cancel-delete').on('click', function (e) {
+        e.preventDefault();
+        jQuery('#confirm-delete-modal').css('display', 'none');
     });
+});

@@ -83,8 +83,14 @@ class Slider_Home_Block {
 
                 <!-- Champ caché pour conserver l'image de background existante -->
                 <?php if (!empty($slide_data['bg_image'])) : ?>
-                    <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
-                    <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
+                    <div class="relative inline-block">
+                        <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
+                        <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
+                        <!-- Bouton de suppression -->
+                        <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-home-remove-img" data-logo-index="<?php echo esc_attr($slide_index); ?>">
+                        &times;
+                        </button>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -119,8 +125,14 @@ class Slider_Home_Block {
 
                 <!-- Champ caché pour conserver l'URL de l'image existante -->
                 <?php if (!empty($slide_data['extra_image'])) : ?>
-                    <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image_existing]" value="<?php echo esc_url($slide_data['extra_image']); ?>">
-                    <img src="<?php echo esc_url($slide_data['extra_image']); ?>" alt="Image supplémentaire" class="mt-2 max-w-xs">
+                    <div class="relative inline-block">
+                        <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image_existing]" value="<?php echo esc_url($slide_data['extra_image']); ?>">
+                        <img src="<?php echo esc_url($slide_data['extra_image']); ?>" alt="Image supplémentaire" class="mt-2 max-w-xs">
+                        <!-- Bouton de suppression -->
+                        <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-home-remove-img" data-logo-index="<?php echo esc_attr($slide_index); ?>">
+                            &times;
+                        </button>   
+                    </div>                 
                 <?php endif; ?>
             </div>
 

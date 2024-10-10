@@ -76,8 +76,14 @@ class Slider_Block {
                 <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                 <!-- Champ caché pour conserver l'URL de l'image existante -->
                 <?php if (!empty($slide_data['bg_image'])) : ?>
-                    <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
-                    <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Image de background" class="mt-2 max-w-xs">
+                    <div class="relative inline-block">
+                        <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
+                        <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Image de background" class="mt-2 max-w-xs">
+                        <!-- Bouton de suppression -->
+                        <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-remove-img" data-logo-index="<?php echo esc_attr($slide_index); ?>">
+                            &times;
+                        </button> 
+                    </div>                                            
                 <?php endif; ?>
             </div>
 

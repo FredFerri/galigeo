@@ -39,9 +39,7 @@ function admin_slider_home_scripts($, builderContainer) {
 
         const sliderContainer = $(this).siblings('.slider-home-slides');
         const blockIndex = sliderContainer.data('block-index');
-        alert(blockIndex);
         const slideCount = sliderContainer.children().length;
-        alert(slideCount);
 
         if (slideCount < 4) {
             const newSlide = $('#slide-home-template').html()
@@ -98,6 +96,26 @@ function admin_slider_home_scripts($, builderContainer) {
     // Initialiser le slider à l'affichage
     initializeSlider();
 }
+
+/* Gestion de la suppression dynamique des images */
+const removeImgButtons = document.querySelectorAll('.slider-home-remove-img');
+
+removeImgButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        alert('ok');
+        const ImgContainer = this.closest('.relative');
+        const ImgIndex = this.getAttribute('data-img-index');
+
+        // Masquer l'image et le bouton
+        ImgContainer.style.display = 'none';
+
+        // Désactiver l'input correspondant pour qu'il ne soit pas envoyé dans le formulaire
+        const hiddenInput = ImgContainer.querySelector('input[type="hidden"]');
+        if (hiddenInput) {
+            hiddenInput.disabled = true;
+        }
+    });
+});
 
 // Appel de la fonction lorsque la page est prête
 // jQuery(document).ready(function($) {

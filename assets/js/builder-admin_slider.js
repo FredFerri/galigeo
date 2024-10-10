@@ -94,5 +94,24 @@ function admin_slider_scripts($, builderContainer) {
     // Gestion de l'affichage du bouton
     builderContainer.on('change', 'input[name$="[show_button]"]', function() {
         $(this).closest('.slide-fields, .video-block').find('.button-options').toggle(this.checked);
-    });    
+    });  
+
+    /* Gestion de la suppression dynamique des images */
+    const removeImgButtons = document.querySelectorAll('.slider-remove-img');
+
+    removeImgButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const ImgContainer = this.closest('.relative');
+            const ImgIndex = this.getAttribute('data-img-index');
+
+            // Masquer l'image et le bouton
+            ImgContainer.style.display = 'none';
+
+            // Désactiver l'input correspondant pour qu'il ne soit pas envoyé dans le formulaire
+            const hiddenInput = ImgContainer.querySelector('input[type="hidden"]');
+            if (hiddenInput) {
+                hiddenInput.disabled = true;
+            }
+        });
+    });      
 }
