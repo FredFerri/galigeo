@@ -36,6 +36,8 @@
     padding-bottom: 56.25%; /* 16:9 aspect ratio */
     height: 0;
     overflow: hidden;
+    border-radius: 2rem;
+    box-shadow: 0px 8px 24px -8px rgba(0, 0, 0, 0.25);
 }
 
 .galigeo-builder-video .video-container iframe {
@@ -270,4 +272,15 @@
 
 .av_alternate_visual_block > .container {
     gap: 4em;
+}
+
+@media all and (max-width: 768px) {
+    .av_alternate_visual_block > .container {
+        display: flex;
+        flex-direction: column !important;
+    }
+
+    .av_text_block, .av_image_block {
+        width: 100% !important;
+    }
 }
