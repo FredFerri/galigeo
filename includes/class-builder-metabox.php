@@ -5,6 +5,8 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_video.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_cta.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_visual_alt.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_logos.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_import_html.php';
+
 
 class Builder_Metabox {
     private $blocks;
@@ -17,6 +19,7 @@ class Builder_Metabox {
             'call_to_action' => new Call_To_Action_Block(),
             'alternate_visual' => new Alternate_Visual_Block(),
             'logos_carousel' => new Client_Carousel_Block(),
+            'import_html' => new Import_HTML_Block()
         ];
 
         add_action('add_meta_boxes', array($this, 'add_meta_box'));
