@@ -1,7 +1,6 @@
 <?php
 class Alternate_Visual_Block {
     public function render($data, $index) {
-        var_dump($data);
         ?>
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">
             <!-- Fichier (image, vidéo, GIF) -->

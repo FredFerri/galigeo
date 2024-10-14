@@ -12,7 +12,7 @@ class Video_Block_Frontend {
         $button_color = $data['button_color'] ?? '#000000';
 
         if ($video_url) {
-            $output .= '<div class="builder-video mb-8 compressed-width flex flex-col">';
+            $output .= '<div class="galigeo-builder-video mb-8 compressed-width flex flex-col">';
             if ($video_title) {
                 $output .= "<{$title_tag} class=\"video-title text-2xl font-bold mb-4 galigeo-bleu text-center\">" . esc_html($video_title) . "</{$title_tag}>";
             }

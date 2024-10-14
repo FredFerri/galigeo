@@ -23,22 +23,22 @@
 /* Video block */
 
 
-.builder-video {
+.galigeo-builder-video {
     margin: 70px auto;
 }
 
-.video-title {
+.galigeo-builder-video .video-title {
     margin-bottom: 10px;
 }
 
-.video-container {
+.galigeo-builder-video .video-container {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 aspect ratio */
     height: 0;
     overflow: hidden;
 }
 
-.video-container iframe {
+.galigeo-builder-video .video-container iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -46,7 +46,7 @@
     height: 100%;
 }
 
-.video-description {
+.galigeo-builder-video .video-description {
     margin-top: 10px;
 }
 
