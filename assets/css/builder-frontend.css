@@ -284,3 +284,59 @@
         width: 100% !important;
     }
 }
+
+/* Colonnes simples */
+
+.galigeo-columns-block {
+    background: #F4F5F7;
+    border-radius: 2rem;
+    padding: 1.5rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.galigeo-columns-block .galigeo-column {
+    background: #fff;
+    border-radius: 1.5rem;
+    padding: 1rem 1rem 1.5rem 1rem;
+}
+
+.galigeo-column-title {
+    font-family: Montserrat Medium;
+    font-size: 2rem;
+    color: #03234D;
+    margin-bottom: 1rem;
+}
+
+.galigeo-column-desc {
+    font-family : 'Montserrat Regular';
+    font-size :  1.125rem;
+    color : #909090;
+    margin-bottom: 1.5rem;
+}
+
+.galigeo-column-img {
+    width: 250px !important;
+}
+
+.galigeo-column {
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 32%;
+    height: 450px;
+}
+
+@media all and (max-width: 768px) {
+    .galigeo-columns-block {
+        flex-direction: column;
+    }
+
+    .galigeo-column {
+        width: 90% !important;
+    }
+}

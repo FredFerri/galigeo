@@ -5,6 +5,8 @@
     display: none;
 }
 
+
+
 /* règles pour le reste des menus WP (en cas de conflit) */
 .wp-list-table {
     position: initial !important;
@@ -75,6 +77,21 @@
     align-items: center;
     z-index: 9999; /* S'assurer que la modale est au-dessus de tout le reste */
 }
+
+/* Modal de sélection du block à ajouter */
+.galigeo-dialog .ui-dialog-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 15px;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.galigeo-dialog .ui-dialog-content .button {
+    min-height: 40px !important;
+}
+
 
 /* Conteneur de la fenêtre modale */
 #galigeo_builder #confirm-delete-modal .modal-content {

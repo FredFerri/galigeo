@@ -29,10 +29,13 @@ jQuery(document).ready(function($) {
                   '<button class="button" data-type="call_to_action">Call to action</button>' +
                   '<button class="button" data-type="alternate_visual">Visuel alterné</button>' +
                   '<button class="button" data-type="logos_carousel">Carousel logos</button>' +
-                  '<button class="button" data-type="import_html">Import HTML</button>'
+                  '<button class="button" data-type="import_html">Import HTML</button>' +
+                  '<button class="button" data-type="simple_columns">Colonnes simples</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,
+            dialogClass: 'galigeo-dialog',
+            width: '40%',
             buttons: {
                 "Annuler": function() {
                     jQuery(this).dialog('close');
@@ -98,7 +101,7 @@ jQuery(document).ready(function($) {
     if (typeof admin_logos_carousel_scripts === 'function') {
         admin_logos_carousel_scripts($, builderContainer);
     }    
-           
+
 
 });
 

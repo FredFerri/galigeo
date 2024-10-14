@@ -5,6 +5,7 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_video.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_cta.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_alternate_visual.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_import_html.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_simple_columns.php';
 
 class Builder_Frontend {
     private $blocks;
@@ -16,7 +17,8 @@ class Builder_Frontend {
             'video' => new Video_Block_Frontend(),
             'call_to_action' => new Call_To_Action_Block_Frontend(),
             'alternate_visual' => new Alternate_Visual_Block_Frontend(),
-            'import_html' => new Import_HTML_Block_Frontend()
+            'import_html' => new Import_HTML_Block_Frontend(),
+            'simple_columns' => new Simple_Columns_Block_Frontend(),
         ];
 
         add_filter('the_content', array($this, 'display_builder_content'));

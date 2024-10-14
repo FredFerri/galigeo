@@ -17,7 +17,7 @@ class Import_HTML_Block_Frontend {
         $id_attr = $block_id ? 'id="' . esc_attr($block_id) . '"' : '';
 
         // Construction de l'affichage du bloc
-        $output = '<div class="import-html-block py-12" ' . $id_attr . ' style="' . esc_attr($background_style) . '">';   
+        $output = '<div class="import-html-block py-12 my-12" ' . $id_attr . ' style="' . esc_attr($background_style) . '">';   
         
         // Affichage du titre
         if ($title) {
