@@ -30,7 +30,7 @@ class Slider_Block {
         ?>
         <div class="slide-fields bg-gray-100 p-4 rounded-md mb-4">
             <h4 class="font-semibold mb-2">Slide <span class="slide-number"><?php echo esc_html($slide_index + 1); ?></span></h4>
-            
+
             <!-- Titre du slide -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre du slide :</label>
@@ -74,41 +74,43 @@ class Slider_Block {
             <div class="mb-4 bg-image-field <?php echo ($slide_data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
                 <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <!-- Champ caché pour conserver l'URL de l'image existante -->
                 <?php if (!empty($slide_data['bg_image'])) : ?>
                     <div class="relative inline-block">
                         <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
                         <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Image de background" class="mt-2 max-w-xs">
-                        <!-- Bouton de suppression -->
                         <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-remove-img" data-logo-index="<?php echo esc_attr($slide_index); ?>">
                             &times;
-                        </button> 
-                    </div>                                            
+                        </button>
+                    </div>
                 <?php endif; ?>
             </div>
 
-            <!-- Checkbox pour le bouton -->
+            <!-- Type de média -->
             <div class="mb-4">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][show_button]" value="1" <?php checked(!empty($slide_data['show_button']), true); ?> class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <span class="ml-2 text-sm text-gray-700">Afficher un bouton</span>
-                </label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Type de média :</label>
+                <select name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][media_type]" class="media-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="image" <?php selected($slide_data['media_type'] ?? 'image', 'image'); ?>>Image</option>
+                    <option value="video" <?php selected($slide_data['media_type'] ?? 'image', 'video'); ?>>Vidéo</option>
+                </select>
             </div>
 
-            <!-- Options du bouton -->
-            <div class="button-options <?php echo !empty($slide_data['show_button']) ? 'block' : 'hidden'; ?>">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Texte du bouton :</label>
-                    <input type="text" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][button_text]" value="<?php echo esc_attr($slide_data['button_text'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">URL du bouton :</label>
-                    <input type="url" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][button_url]" value="<?php echo esc_url($slide_data['button_url'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Couleur du bouton :</label>
-                    <input type="color" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][button_color]" value="<?php echo esc_attr($slide_data['button_color'] ?? '#000000'); ?>" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-10 w-20">
-                </div>
+            <!-- Fichier de média -->
+            <div class="mb-4 media-file-field">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fichier de média :</label>
+                <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][media_file]" accept="image/*,video/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                <?php if (!empty($slide_data['media_file'])) : ?>
+                    <div class="relative inline-block mt-2">
+                        <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][media_file_existing]" value="<?php echo esc_url($slide_data['media_file']); ?>">
+                        <?php if ($slide_data['media_type'] === 'video') : ?>
+                            <video src="<?php echo esc_url($slide_data['media_file']); ?>" class="max-w-xs" controls></video>
+                        <?php else : ?>
+                            <img src="<?php echo esc_url($slide_data['media_file']); ?>" alt="Media" class="max-w-xs">
+                        <?php endif; ?>
+                        <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-remove-media" data-media-index="<?php echo esc_attr($slide_index); ?>">
+                            &times;
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <button type="button" class="remove-slide mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
@@ -121,9 +123,6 @@ class Slider_Block {
     public function sanitize($data, $post_id, $index) {
         $sanitized_data = array();
 
-        // var_dump($data);
-        // die();
-
         if (isset($data['slides']) && is_array($data['slides'])) {
             foreach ($data['slides'] as $slide_index => $slide_data) {
                 $sanitized_slide = array(
@@ -131,10 +130,7 @@ class Slider_Block {
                     'title_tag'   => isset($slide_data['title_tag']) ? sanitize_text_field($slide_data['title_tag']) : 'h2',
                     'bg_type'     => isset($slide_data['bg_type']) ? sanitize_text_field($slide_data['bg_type']) : 'color',
                     'bg_color'    => isset($slide_data['bg_color']) ? sanitize_hex_color($slide_data['bg_color']) : '#ffffff',
-                    'show_button' => isset($slide_data['show_button']) ? (bool)$slide_data['show_button'] : false,
-                    'button_text' => isset($slide_data['button_text']) ? sanitize_text_field($slide_data['button_text']) : '',
-                    'button_url'  => isset($slide_data['button_url']) ? esc_url_raw($slide_data['button_url']) : '',
-                    'button_color'=> isset($slide_data['button_color']) ? sanitize_hex_color($slide_data['button_color']) : '#000000',
+                    'media_type'  => isset($slide_data['media_type']) ? sanitize_text_field($slide_data['media_type']) : 'image',
                 );
 
                 // Gestion de l'image de background
@@ -152,9 +148,25 @@ class Slider_Block {
                             $sanitized_slide['bg_image'] = $upload['url'];
                         }
                     } elseif (!empty($slide_data['bg_image_existing'])) {
-                        // Conserver l'image existante si aucune nouvelle image n'a été uploadée
                         $sanitized_slide['bg_image'] = esc_url_raw($slide_data['bg_image_existing']);
                     }
+                }
+
+                // Gestion du fichier de média
+                if (!empty($_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['media_file'])) {
+                    $file = array(
+                        'name'     => $_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['media_file'],
+                        'type'     => $_FILES['builder_blocks']['type'][$index]['data']['slides'][$slide_index]['media_file'],
+                        'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['slides'][$slide_index]['media_file'],
+                        'error'    => $_FILES['builder_blocks']['error'][$index]['data']['slides'][$slide_index]['media_file'],
+                        'size'     => $_FILES['builder_blocks']['size'][$index]['data']['slides'][$slide_index]['media_file']
+                    );
+                    $upload = $this->handle_image_upload($file, $post_id);
+                    if ($upload && !is_wp_error($upload)) {
+                        $sanitized_slide['media_file'] = $upload['url'];
+                    }
+                } elseif (!empty($slide_data['media_file_existing'])) {
+                    $sanitized_slide['media_file'] = esc_url_raw($slide_data['media_file_existing']);
                 }
 
                 $sanitized_data['slides'][$slide_index] = $sanitized_slide;

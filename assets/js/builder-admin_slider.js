@@ -10,7 +10,7 @@ function admin_slider_scripts($, builderContainer) {
             return;
         }
 
-        const blockIndex = sliderContainer.data('block-index');
+        const blockIndex = sliderContainer.closest('.builder-block').data('index');
         alert(blockIndex);
         if (blockIndex === undefined) {
             console.error("Block index not found on slider container.");
@@ -113,5 +113,41 @@ function admin_slider_scripts($, builderContainer) {
                 hiddenInput.disabled = true;
             }
         });
-    });      
+    });   
+
+    // Gérer le changement du type de média
+    $(document).on('change', '.media-type-select', function() {
+        const mediaType = $(this).val(); // Récupère le type de média sélectionné
+        const mediaField = $(this).closest('.slide-fields').find('.media-field');
+
+        if (mediaType === 'video') {
+            // Si la vidéo est sélectionnée, changer le texte du label et accepter les fichiers vidéo
+            mediaField.find('label').text('Vidéo :');
+            mediaField.find('input[type="file"]').attr('accept', 'video/*');
+        } else {
+            // Si l'image est sélectionnée, changer le texte du label et accepter les fichiers image
+            mediaField.find('label').text('Image :');
+            mediaField.find('input[type="file"]').attr('accept', 'image/*');
+        }
+    });
+
+    // Suppression de l'image ou du fichier média dans le slide
+    $(document).on('click', '.slider-remove-media', function() {
+        const slideIndex = $(this).data('slide-index');
+        const $mediaContainer = $(this).closest('.media-file-field');
+
+        // Cache le bouton de suppression et l'élément média
+        $mediaContainer.find('input[type="hidden"]').remove();
+        $mediaContainer.find('img, video').remove();
+        $(this).remove();
+
+        // Ajouter un champ caché pour indiquer que le média doit être supprimé
+        $mediaContainer.append(`<input type="hidden" name="builder_blocks[${slideIndex}][data][slides][${slideIndex}][media_file]" value="">`);
+    });
+
+
+    // Initialiser l'affichage des champs de média en fonction de la sélection actuelle
+    $('.media-type-select').each(function() {
+        $(this).trigger('change');
+    });   
 }

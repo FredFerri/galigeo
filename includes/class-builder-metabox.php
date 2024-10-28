@@ -7,6 +7,9 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_visual_alt.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_logos.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_import_html.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_simple_columns.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_texte.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_contact.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_testimonials.php';
 
 
 class Builder_Metabox {
@@ -21,8 +24,12 @@ class Builder_Metabox {
             'alternate_visual' => new Alternate_Visual_Block(),
             'logos_carousel' => new Client_Carousel_Block(),
             'import_html' => new Import_HTML_Block(),
-            'simple_columns' => new Simple_Columns_Block()
+            'simple_columns' => new Simple_Columns_Block(),
+            'texte' => new Text_Block(),
+            'contact' => new Contact_Block(),
+            'testimonials' => new Testimonials_Block()
         ];
+
 
         add_action('add_meta_boxes', array($this, 'add_meta_box'));
         add_action('save_post', array($this, 'save_metabox'));
@@ -58,6 +65,8 @@ class Builder_Metabox {
                 <?php
                 if (!empty($blocks)) {
                     foreach ($blocks as $index => $block) {
+                        // var_dump($index);
+                        // var_dump($block);
                         $this->render_block($block, $index);
                     }
                 }
@@ -121,7 +130,7 @@ class Builder_Metabox {
 
         // Boucle sur les blocs soumis
         foreach ($blocks as $index => $block) {
-            if (!isset($block['type']) || !isset($this->blocks[$block['type']]) || $index == 'TEMPLATE_INDEX') {
+            if (!isset($block['type']) || !isset($this->blocks[$block['type']]) || $index === 'TEMPLATE_INDEX') {
                 continue; // Si le type n'existe pas ou est invalide, on ignore ce bloc
             }
 

@@ -38,8 +38,10 @@ function admin_slider_home_scripts($, builderContainer) {
         e.preventDefault();
 
         const sliderContainer = $(this).siblings('.slider-home-slides');
-        const blockIndex = sliderContainer.data('block-index');
+        const blockIndex = sliderContainer.closest('.builder-block').data('index');
         const slideCount = sliderContainer.children().length;
+        // alert(blockIndex);
+        // alert(slideCount);
 
         if (slideCount < 4) {
             const newSlide = $('#slide-home-template').html()

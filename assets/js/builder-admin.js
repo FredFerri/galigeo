@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
     const addBlockButton = jQuery('#add-block');
     const blockTemplates = jQuery('#block-templates');
 
-    let blockIndex = blocksContainer.children().length;
+    var blockIndex = blocksContainer.children().length;
 
     // Gestion de l'ajout de block
     addBlockButton.on('click', function(e) {
@@ -27,10 +27,13 @@ jQuery(document).ready(function($) {
                   '<button class="button" data-type="slider">Slider</button> ' +
                   '<button class="button" data-type="video">Vidéo</button>' +
                   '<button class="button" data-type="call_to_action">Call to action</button>' +
-                  '<button class="button" data-type="alternate_visual">Visuel alterné</button>' +
+                  '<button class="button" data-type="alternate_visual">Visuel alterné</button>' + 
                   '<button class="button" data-type="logos_carousel">Carousel logos</button>' +
                   '<button class="button" data-type="import_html">Import HTML</button>' +
-                  '<button class="button" data-type="simple_columns">Colonnes simples</button>'
+                  '<button class="button" data-type="simple_columns">Colonnes simples</button>' +
+                  '<button class="button" data-type="texte">Texte</button>' +
+                  '<button class="button" data-type="contact">Contact</button>' +
+                  '<button class="button" data-type="testimonials">Témoignages</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,
@@ -52,6 +55,7 @@ jQuery(document).ready(function($) {
     }
 
     function addBlock(type) {
+        // alert(blockIndex);
         const template = blockTemplates.find(`.builder-block[data-type="${type}"]`).clone();
         template.attr('data-index', blockIndex);
         template.find('input, textarea, select').each(function() {
@@ -60,6 +64,41 @@ jQuery(document).ready(function($) {
                 jQuery(this).attr('name', name.replace('TEMPLATE_INDEX', blockIndex));
             }
         });
+
+        // CODE SPECIFIQUE AU BLOCK "TEXTE"
+        // Vérifier si le bloc texte est présent dans le template
+        if (template.find(`#text-buttons-container-TEMPLATE_INDEX`).length > 0) {
+            // Mettre à jour l'ID du container des boutons pour le bloc Texte
+            template.find(`#text-buttons-container-TEMPLATE_INDEX`).attr('id', `text-buttons-container-${blockIndex}`);
+
+            // Mettre à jour l'ID du template de bouton pour le bloc Texte
+            template.find(`#text-button-template-TEMPLATE_INDEX`).attr('id', `text-button-template-${blockIndex}`);
+
+            // Mettre à jour le data-block-index du bouton d'ajout de bouton
+            template.find('.add-text-button').attr('data-block-index', blockIndex);
+
+            // Mettre à jour les attributs name dans le template des boutons
+            let buttonTemplate = template.find(`#text-button-template-${blockIndex}`);
+            buttonTemplate.html(buttonTemplate.html().replace(/TEMPLATE_INDEX/g, blockIndex));            
+        }
+
+        // CODE SPECIFIQUE AU BLOCK "CTA"
+        // Vérifier si le bloc texte est présent dans le template
+        if (template.find(`#cta-buttons-container-TEMPLATE_INDEX`).length > 0) {
+            // Mettre à jour l'ID du container des boutons pour le bloc Texte
+            template.find(`#cta-buttons-container-TEMPLATE_INDEX`).attr('id', `cta-buttons-container-${blockIndex}`);
+
+            // Mettre à jour l'ID du template de bouton pour le bloc Texte
+            template.find(`#cta-button-template-TEMPLATE_INDEX`).attr('id', `cta-button-template-${blockIndex}`);
+
+            // Mettre à jour le data-block-index du bouton d'ajout de bouton
+            template.find('.add-cta-button').attr('data-block-index', blockIndex);
+
+            // Mettre à jour les attributs name dans le template des boutons
+            let buttonTemplate = template.find(`#cta-button-template-${blockIndex}`);
+            buttonTemplate.html(buttonTemplate.html().replace(/TEMPLATE_INDEX/g, blockIndex));            
+        }        
+
         blocksContainer.append(template);
         blockIndex++;
         updateBlockIndexes();
@@ -101,28 +140,38 @@ jQuery(document).ready(function($) {
     if (typeof admin_logos_carousel_scripts === 'function') {
         admin_logos_carousel_scripts($, builderContainer);
     }    
+    if (typeof admin_text_block_scripts === 'function') {
+        admin_text_block_scripts($, builderContainer);
+    }   
+    if (typeof admin_contact_block_scripts === 'function') {
+        admin_contact_block_scripts($, builderContainer);
+    }  
+    if (typeof admin_testimonials_scripts === 'function') {
+        admin_testimonials_scripts($, builderContainer);
+    }        
 
 
+    /* Gestion de la modal de confirmation de suppression d'un block */
+    jQuery(document).on('click', '.remove-block', function (e) {
+        e.preventDefault();
+        var blockToRemove = jQuery(this).closest('.builder-block');
+        
+        // Affiche la modale en modifiant la propriété display
+        jQuery('#confirm-delete-modal').css('display', 'flex');
+
+        // Gérer le click sur le bouton "Supprimer" dans la modale
+        jQuery('#confirm-delete').off('click').on('click', function (e) {
+            e.preventDefault();
+            blockToRemove.remove();
+            updateBlockIndexes();
+            jQuery('#confirm-delete-modal').css('display', 'none');
+        });
+
+        // Gérer le click sur le bouton "Annuler" dans la modale
+        jQuery('#cancel-delete').on('click', function (e) {
+            e.preventDefault();
+            jQuery('#confirm-delete-modal').css('display', 'none');
+        });
+    });
 });
 
-/* Gestion de la modal de confirmation de suppression d'un block */
-jQuery(document).on('click', '.remove-block', function (e) {
-    e.preventDefault();
-    var blockToRemove = jQuery(this).closest('.builder-block');
-    
-    // Affiche la modale en modifiant la propriété display
-    jQuery('#confirm-delete-modal').css('display', 'flex');
-
-    // Gérer le click sur le bouton "Supprimer" dans la modale
-    jQuery('#confirm-delete').off('click').on('click', function (e) {
-        e.preventDefault();
-        blockToRemove.remove();
-        jQuery('#confirm-delete-modal').css('display', 'none');
-    });
-
-    // Gérer le click sur le bouton "Annuler" dans la modale
-    jQuery('#cancel-delete').on('click', function (e) {
-        e.preventDefault();
-        jQuery('#confirm-delete-modal').css('display', 'none');
-    });
-});
