@@ -333,6 +333,16 @@
     height: 450px;
 }
 
+.galigeo-logo-carousel-image.black-white {
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+/* Optionnel : Effet de survol pour revenir en couleur */
+.galigeo-logo-carousel-image.black-white:hover {
+    filter: grayscale(0%);
+}
+
 @media all and (max-width: 768px) {
     .galigeo-columns-block {
         flex-direction: column;
@@ -452,3 +462,78 @@
 
 }
 
+
+.galigeo-logo-carousel-wrapper {
+    position: relative;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.galigeo-logo-carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.galigeo-logo-carousel-container {
+    display: flex;
+    width: 100%;
+}
+
+.galigeo-logo-carousel-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.galigeo-logo-carousel-image {
+    max-width: 100%;
+    max-height: 100px; /* Hauteur maximum des logos */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.galigeo-logo-carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 10;
+}
+
+.galigeo-logo-carousel-prev {
+    left: 0;
+}
+
+.galigeo-logo-carousel-next {
+    right: 0;
+}
+
+.galigeo-logo-carousel-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Media queries pour le responsive */
+@media screen and (min-width: 1024px) {
+    .galigeo-logo-carousel-slide {
+        flex: 0 0 20%; /* 5 logos */
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .galigeo-logo-carousel-slide {
+        flex: 0 0 33.333%; /* 3 logos */
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .galigeo-logo-carousel-slide {
+        flex: 0 0 100%; /* 1 logo */
+    }
+}

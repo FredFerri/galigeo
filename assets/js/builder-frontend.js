@@ -231,3 +231,125 @@ document.addEventListener('DOMContentLoaded', function() {
         updateActiveSlide();
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    function initCarousel() {
+        const carousels = document.querySelectorAll('.galigeo-logo-carousel');
+        
+        carousels.forEach(carousel => {
+            const container = carousel.querySelector('.galigeo-logo-carousel-container');
+            const slides = Array.from(carousel.querySelectorAll('.galigeo-logo-carousel-slide'));
+            const prevBtn = carousel.querySelector('.galigeo-logo-carousel-prev');
+            const nextBtn = carousel.querySelector('.galigeo-logo-carousel-next');
+            
+            let slidesPerView = getSlidesPerView();
+            let slideWidth = 100 / slidesPerView;
+            let autoplayInterval = null;
+            
+            function setupSlider() {
+                const clonesStart = slides.slice(-slidesPerView).map(slide => slide.cloneNode(true));
+                const clonesEnd = slides.slice(0, slidesPerView).map(slide => slide.cloneNode(true));
+                
+                container.innerHTML = '';
+                [...clonesStart, ...slides, ...clonesEnd].forEach(slide => {
+                    slide.style.flex = `0 0 ${slideWidth}%`;
+                    container.appendChild(slide);
+                });
+                
+                updatePosition(-slidesPerView * slideWidth);
+            }
+            
+            function getSlidesPerView() {
+                if (window.innerWidth >= 1024) return 5;
+                if (window.innerWidth >= 768) return 3;
+                return 1;
+            }
+            
+            let currentTranslate = -slidesPerView * slideWidth;
+            let isTransitioning = false;
+            
+            function updatePosition(translate, smooth = false) {
+                container.style.transition = smooth ? 'transform 0.3s ease' : 'none';
+                container.style.transform = `translateX(${translate}%)`;
+                currentTranslate = translate;
+            }
+            
+            function slideNext() {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                
+                const nextTranslate = currentTranslate - slideWidth;
+                updatePosition(nextTranslate, true);
+                
+                setTimeout(() => {
+                    if (nextTranslate <= -(slides.length + slidesPerView) * slideWidth) {
+                        updatePosition(-slidesPerView * slideWidth);
+                    }
+                    isTransitioning = false;
+                }, 300);
+            }
+            
+            function slidePrev() {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                
+                const nextTranslate = currentTranslate + slideWidth;
+                updatePosition(nextTranslate, true);
+                
+                setTimeout(() => {
+                    if (nextTranslate > -slidesPerView * slideWidth) {
+                        updatePosition(-(slides.length) * slideWidth);
+                    }
+                    isTransitioning = false;
+                }, 300);
+            }
+            
+            // Démarrer le défilement automatique
+            function startAutoplay() {
+                if (autoplayInterval) return;
+                autoplayInterval = setInterval(slideNext, 3000);
+            }
+            
+            // Arrêter le défilement automatique
+            function stopAutoplay() {
+                if (autoplayInterval) {
+                    clearInterval(autoplayInterval);
+                    autoplayInterval = null;
+                }
+            }
+            
+            // Event Listeners
+            prevBtn.addEventListener('click', () => {
+                slidePrev();
+                stopAutoplay(); // Arrêter l'autoplay lors d'un clic manuel
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                slideNext();
+                stopAutoplay(); // Arrêter l'autoplay lors d'un clic manuel
+            });
+            
+            // Arrêter l'autoplay au survol
+            carousel.addEventListener('mouseenter', stopAutoplay);
+            
+            // Reprendre l'autoplay quand la souris quitte le carousel
+            carousel.addEventListener('mouseleave', startAutoplay);
+            
+            // Gestion du responsive
+            window.addEventListener('resize', () => {
+                const newSlidesPerView = getSlidesPerView();
+                if (newSlidesPerView !== slidesPerView) {
+                    slidesPerView = newSlidesPerView;
+                    slideWidth = 100 / slidesPerView;
+                    setupSlider();
+                }
+            });
+            
+            // Setup initial
+            setupSlider();
+            startAutoplay(); // Démarrer l'autoplay au chargement
+        });
+    }
+    
+    initCarousel();
+});

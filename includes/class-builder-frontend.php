@@ -9,6 +9,7 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_simple_columns.
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_text.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_contact.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_testimonials.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_logos.php';
 
 class Builder_Frontend {
     private $blocks;
@@ -24,7 +25,8 @@ class Builder_Frontend {
             'simple_columns' => new Simple_Columns_Block_Frontend(),
             'texte' => new Text_Block_Frontend(),
             'contact' => new Contact_Block_Frontend(),
-            'testimonials' => new Testimonials_Block_Frontend()
+            'testimonials' => new Testimonials_Block_Frontend(),
+            'logos_carousel' => new Logos_Carousel_Block_Frontend()
         ];
 
         add_filter('the_content', array($this, 'display_builder_content'));
