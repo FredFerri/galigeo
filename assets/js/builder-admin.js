@@ -28,12 +28,13 @@ jQuery(document).ready(function($) {
                   '<button class="button" data-type="video">Vidéo</button>' +
                   '<button class="button" data-type="call_to_action">Call to action</button>' +
                   '<button class="button" data-type="alternate_visual">Visuel alterné</button>' + 
-                  '<button class="button" data-type="logos_carousel">Carousel logos</button>' +
+                  // '<button class="button" data-type="logos_carousel">Carousel logos</button>' +
                   '<button class="button" data-type="import_html">Import HTML</button>' +
                   '<button class="button" data-type="simple_columns">Colonnes simples</button>' +
                   '<button class="button" data-type="texte">Texte</button>' +
                   '<button class="button" data-type="contact">Contact</button>' +
-                  '<button class="button" data-type="testimonials">Témoignages</button>'
+                  '<button class="button" data-type="testimonials">Témoignages</button>' +
+                  '<button class="button" data-type="heros_cas_client">Heros cas client</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,

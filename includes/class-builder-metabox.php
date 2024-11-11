@@ -10,6 +10,7 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_simple_columns.p
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_texte.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_contact.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_testimonials.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_heros_cas_client.php';
 
 
 class Builder_Metabox {
@@ -27,7 +28,8 @@ class Builder_Metabox {
             'simple_columns' => new Simple_Columns_Block(),
             'texte' => new Text_Block(),
             'contact' => new Contact_Block(),
-            'testimonials' => new Testimonials_Block()
+            'testimonials' => new Testimonials_Block(),
+            'heros_cas_client' => new Heros_Cas_Client_Block()
         ];
 
 
