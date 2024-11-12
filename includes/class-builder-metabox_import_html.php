@@ -89,37 +89,39 @@ class Import_HTML_Block {
         <?php
     }
 
-    public function sanitize($data, $post_id, $index) {
-        $sanitized_data = array(
-            'html_title' => sanitize_text_field($data['html_title'] ?? ''),
-            'html_title_tag' => sanitize_text_field($data['html_title_tag'] ?? 'h2'),
-            'html_code' => wp_kses_post($data['html_code'] ?? ''),
-            'html_id' => sanitize_text_field($data['html_id'] ?? ''),
-            'html_background_type' => sanitize_text_field($data['html_background_type'] ?? 'color'),
-            'html_background_color' => sanitize_hex_color($data['html_background_color'] ?? '#ffffff'),
-        );
+public function sanitize($data, $post_id, $index) {
+    $sanitized_data = array(
+        'html_title' => sanitize_text_field($data['html_title'] ?? ''),
+        'html_title_tag' => sanitize_text_field($data['html_title_tag'] ?? 'h2'),
+        // Utilisation de wp_unslash pour permettre l'insertion de tout le code HTML
+        'html_code' => wp_unslash($data['html_code'] ?? ''),
+        'html_id' => sanitize_text_field($data['html_id'] ?? ''),
+        'html_background_type' => sanitize_text_field($data['html_background_type'] ?? 'color'),
+        'html_background_color' => sanitize_hex_color($data['html_background_color'] ?? '#ffffff'),
+    );
 
-        // Gestion de l'image de background
-        if ($data['html_background_type'] === 'image') {
-            if (!empty($_FILES['builder_blocks']['name'][$index]['data']['html_background_image'])) {
-                $file = array(
-                    'name'     => $_FILES['builder_blocks']['name'][$index]['data']['html_background_image'],
-                    'type'     => $_FILES['builder_blocks']['type'][$index]['data']['html_background_image'],
-                    'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['html_background_image'],
-                    'error'    => $_FILES['builder_blocks']['error'][$index]['data']['html_background_image'],
-                    'size'     => $_FILES['builder_blocks']['size'][$index]['data']['html_background_image']
-                );
-                $upload = $this->handle_image_upload($file, $post_id);
-                if ($upload && !is_wp_error($upload)) {
-                    $sanitized_data['html_background_image'] = $upload['url'];
-                }
-            } elseif (!empty($data['html_background_image_existing'])) {
-                $sanitized_data['html_background_image'] = esc_url_raw($data['html_background_image_existing']);
+    // Gestion de l'image de background
+    if ($data['html_background_type'] === 'image') {
+        if (!empty($_FILES['builder_blocks']['name'][$index]['data']['html_background_image'])) {
+            $file = array(
+                'name'     => $_FILES['builder_blocks']['name'][$index]['data']['html_background_image'],
+                'type'     => $_FILES['builder_blocks']['type'][$index]['data']['html_background_image'],
+                'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['html_background_image'],
+                'error'    => $_FILES['builder_blocks']['error'][$index]['data']['html_background_image'],
+                'size'     => $_FILES['builder_blocks']['size'][$index]['data']['html_background_image']
+            );
+            $upload = $this->handle_image_upload($file, $post_id);
+            if ($upload && !is_wp_error($upload)) {
+                $sanitized_data['html_background_image'] = $upload['url'];
             }
+        } elseif (!empty($data['html_background_image_existing'])) {
+            $sanitized_data['html_background_image'] = esc_url_raw($data['html_background_image_existing']);
         }
-
-        return $sanitized_data;
     }
+
+    return $sanitized_data;
+}
+
 
     private function handle_image_upload($file, $post_id) {
         require_once(ABSPATH . 'wp-admin/includes/image.php');

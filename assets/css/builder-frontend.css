@@ -149,6 +149,7 @@
     margin: 70px auto;
     overflow: hidden;
     padding: 0;
+    border-radius: 8px;
 }
 
 .galigeo-slider-home {
@@ -239,6 +240,11 @@
 
 .galigeo-slider-home-nav:hover, .testimonials-slider-nav:hover {
     background: white;
+}
+
+.galigeo-slider-home-prev:hover, .testimonials-slider-prev:hover,
+.galigeo-slider-home-next:hover, .testimonials-slider-next:hover {
+    opacity: 0.5;
 }
 
 .galigeo-slider-home-prev, .testimonials-slider-prev {
