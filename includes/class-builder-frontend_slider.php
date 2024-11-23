@@ -25,7 +25,7 @@ class Slider_Block_Frontend {
 
             // Affichage du titre
             if ($title) {
-                $output .= "<$title_tag class='galigeo-slide-title'>" . esc_html($title) . "</$title_tag>";
+                $output .= "<$title_tag class='galigeo-slide-title galigeo-title'>" . esc_html($title) . "</$title_tag>";
             }
 
             // Affichage du média (image ou vidéo)

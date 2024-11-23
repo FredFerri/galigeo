@@ -21,7 +21,7 @@ class Import_HTML_Block_Frontend {
         
         // Affichage du titre
         if ($title) {
-            $output .= "<$title_tag class='galigeo-html-title text-2xl font-bold mb-4 galigeo-bleu text-center'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='galigeo-html-title galigeo-title text-2xl font-bold mb-4 galigeo-bleu text-center'>" . esc_html($title) . "</$title_tag>";
         }
 
 

@@ -28,13 +28,14 @@ jQuery(document).ready(function($) {
                   '<button class="button" data-type="video">Vidéo</button>' +
                   '<button class="button" data-type="call_to_action">Call to action</button>' +
                   '<button class="button" data-type="alternate_visual">Visuel alterné</button>' + 
-                  // '<button class="button" data-type="logos_carousel">Carousel logos</button>' +
+                  '<button class="button" data-type="logos_carousel">Carousel logos</button>' +
                   '<button class="button" data-type="import_html">Import HTML</button>' +
                   '<button class="button" data-type="simple_columns">Colonnes simples</button>' +
                   '<button class="button" data-type="texte">Texte</button>' +
                   '<button class="button" data-type="contact">Contact</button>' +
                   '<button class="button" data-type="testimonials">Témoignages</button>' +
-                  '<button class="button" data-type="heros_cas_client">Heros cas client</button>'
+                  '<button class="button" data-type="heros_cas_client">Heros cas client</button>' +
+                  '<button class="button" data-type="faq">FAQ</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,
@@ -149,16 +150,23 @@ jQuery(document).ready(function($) {
     }  
     if (typeof admin_testimonials_scripts === 'function') {
         admin_testimonials_scripts($, builderContainer);
-    }        
+    }    
+    if (typeof admin_import_html_scripts === 'function') {
+        admin_import_html_scripts($);
+    }     
+    if (typeof admin_faq_scripts === 'function') {
+        admin_faq_scripts($, builderContainer);
+    }               
 
 
     /* Gestion de la modal de confirmation de suppression d'un block */
     jQuery(document).on('click', '.remove-block', function (e) {
         e.preventDefault();
         var blockToRemove = jQuery(this).closest('.builder-block');
-        
+
         // Affiche la modale en modifiant la propriété display
         jQuery('#confirm-delete-modal').css('display', 'flex');
+        jQuery('#confirm-delete-modal').removeClass('hidden');
 
         // Gérer le click sur le bouton "Supprimer" dans la modale
         jQuery('#confirm-delete').off('click').on('click', function (e) {

@@ -25,7 +25,7 @@ class Simple_Columns_Block_Frontend {
 
             // Affichage du titre
             if (!empty($column['title'])) {
-                $output .= '<' . esc_html($column['title_tag']) . ' class="galigeo-column-title text-2xl font-bold mb-4">' . esc_html($column['title']) . '</' . esc_html($column['title_tag']) . '>';
+                $output .= '<' . esc_html($column['title_tag']) . ' class="galigeo-column-title galigeo-title text-2xl font-bold mb-4">' . esc_html($column['title']) . '</' . esc_html($column['title_tag']) . '>';
             }
 
             // Affichage de la description

@@ -2,10 +2,12 @@
 
 /* règles générales */
 .hidden {
-    display: none;
+    display: none !important;
 }
 
-
+.d-none {
+    display: none;
+}
 
 /* règles pour le reste des menus WP (en cas de conflit) */
 .wp-list-table {
@@ -52,6 +54,36 @@
 .remove-block {
     margin: 15px 0 !important;
 }
+
+.bg-image-container {
+    position: relative;
+    display: inline-block; /* Assure que le bouton reste lié à l'image */
+}
+
+.bg-image-preview {
+    display: block;
+    max-width: 100%; /* S'assure que l'image reste responsive */
+    height: auto;
+}
+
+.remove-bg-image, .remove-extra-image {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px; /* Taille du bouton */
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.extra-image-container, .bg-image-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
 
 .lc_logos_block {
     display: flex;
@@ -125,4 +157,10 @@
 #galigeo_builder #confirm-delete {
     background: #e53e3e;
     color: white;
+}
+
+/* Visuel alterné */
+
+.av-inner-image-container {
+    position: relative;
 }

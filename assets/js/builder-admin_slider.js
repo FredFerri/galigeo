@@ -1,25 +1,21 @@
 function admin_slider_scripts($, builderContainer) {
     // Gestion de l'ajout de slide avec débogage
-    builderContainer.on('click', '.add-slide', function(e) {
+    builderContainer.on('click', '.slider-block .add-slide', function(e) {
         e.preventDefault();
 
-        const sliderContainer = $(this).siblings('.slider-slides');
-        console.dir(sliderContainer);
+        const sliderContainer = $(this).siblings('.slider-block .slider-slides');
         if (!sliderContainer.length) {
             console.error("Slider container (.slider-slides) not found.");
             return;
         }
 
         const blockIndex = sliderContainer.closest('.builder-block').data('index');
-        alert(blockIndex);
         if (blockIndex === undefined) {
             console.error("Block index not found on slider container.");
             return;
         }
 
         const slideCount = sliderContainer.children().length;
-        alert(slideCount);
-        console.dir(sliderContainer);
         // alert(slideCount);
         console.log("Current slide count:", slideCount);
 
@@ -84,17 +80,13 @@ function admin_slider_scripts($, builderContainer) {
     }
 
     // Gestion du type de background
-    builderContainer.on('change', '.bg-type-select', function() {
+    builderContainer.on('change', '.slider-block .bg-type-select', function() {
         const bgType = $(this).val();
         const slideField = $(this).closest('.slide-fields');
         slideField.find('.bg-color-field').toggle(bgType === 'color');
         slideField.find('.bg-image-field').toggle(bgType === 'image');
     });
 
-    // Gestion de l'affichage du bouton
-    builderContainer.on('change', 'input[name$="[show_button]"]', function() {
-        $(this).closest('.slide-fields, .video-block').find('.button-options').toggle(this.checked);
-    });  
 
     /* Gestion de la suppression dynamique des images */
     const removeImgButtons = document.querySelectorAll('.slider-remove-img');
@@ -116,7 +108,7 @@ function admin_slider_scripts($, builderContainer) {
     });   
 
     // Gérer le changement du type de média
-    $(document).on('change', '.media-type-select', function() {
+    $(document).on('change', '.slider-block  .media-type-select', function() {
         const mediaType = $(this).val(); // Récupère le type de média sélectionné
         const mediaField = $(this).closest('.slide-fields').find('.media-field');
 
@@ -147,7 +139,7 @@ function admin_slider_scripts($, builderContainer) {
 
 
     // Initialiser l'affichage des champs de média en fonction de la sélection actuelle
-    $('.media-type-select').each(function() {
+    $('.slider-block .media-type-select').each(function() {
         $(this).trigger('change');
     });   
 }

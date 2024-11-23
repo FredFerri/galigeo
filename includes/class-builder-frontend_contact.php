@@ -17,7 +17,7 @@ class Contact_Block_Frontend {
         $output .= '<div class="container mx-auto px-4">';
 
         if ($title) {
-            $output .= "<$title_tag class='text-3xl font-bold mb-8'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='galigeo-title text-3xl font-bold mb-8'>" . esc_html($title) . "</$title_tag>";
         }
 
         if ($description) {

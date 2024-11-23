@@ -1,126 +1,184 @@
-function admin_slider_home_scripts($, builderContainer) {
-    const sliderContainer = $('.galigeo-slide-home-container');
-    let currentSlide = 0;
-    const totalSlides = sliderContainer.children('.galigeo-slide-home').length;
+(function ($) {
+    $(document).ready(function () {
+        // Gestion du type de background
+        function toggleBackgroundFields(slide) {
+            const bgType = slide.find('.bg-type-select').val();
+            slide.find('.bg-color-field').toggleClass('hidden', bgType !== 'color');
+            slide.find('.bg-image-field').toggleClass('hidden', bgType !== 'image');
+        }
 
-    // Initialisation des boutons et du slider
-    function initializeSlider() {
-        updateSlideVisibility();
-        updateNavButtons();
-    }
+        // Gestion de l'affichage des options de bouton
+        function toggleButtonOptions(slide) {
+            const checkbox = slide.find('input[name$="[show_button]"]');
+            const buttonOptions = slide.find('.button-options');
+            buttonOptions.toggleClass('hidden', !checkbox.is(':checked'));
+        }
 
-    // Mise à jour de la visibilité des slides (affiche seulement le slide actif)
-    function updateSlideVisibility() {
-        sliderContainer.children('.galigeo-slide-home').each(function(index) {
-            if (index === currentSlide) {
-                $(this).addClass('active');
-                $(this).css('transform', 'translateX(0)');
-            } else {
-                $(this).removeClass('active');
-                const translateValue = (index - currentSlide) * 100;
-                $(this).css('transform', `translateX(${translateValue}%)`);
+        // Réindexation des slides après ajout/suppression
+        function updateSlideIndices(sliderContainer) {
+            sliderContainer.children('.slide-home-fields').each(function (index) {
+                const slide = $(this);
+
+                // Met à jour le numéro affiché
+                slide.find('.slide-home-number').text(index + 1);
+
+                // Met à jour les noms des champs
+                slide.find('input, select, textarea').each(function () {
+                    const name = $(this).attr('name');
+                    if (name) {
+                        $(this).attr('name', name.replace(/\[slides\]\[\d+\]/, `[slides][${index}]`));
+                    }
+                });
+            });
+        }
+
+        // Gestion des modals pour les champs d'image
+        function handleMediaFrame(buttonClass, inputClass, previewClass, containerClass, removeClass) {
+            $(document).on('click', buttonClass, function (event) {
+                event.preventDefault();
+
+                const button = $(this);
+                const slide = button.closest('.slide-home-fields');
+                const input = slide.find(inputClass);
+                const preview = slide.find(previewClass);
+                const container = slide.find(containerClass);
+                const removeButton = slide.find(removeClass);
+
+                const mediaFrame = wp.media({
+                    title: 'Choisir une image',
+                    button: { text: 'Utiliser cette image' },
+                    multiple: false,
+                });
+
+                mediaFrame.on('select', function () {
+                    const attachment = mediaFrame.state().get('selection').first().toJSON();
+                    input.val(attachment.url);
+                    preview.attr('src', attachment.url).removeClass('hidden');
+                    container.removeClass('hidden');
+                    removeButton.removeClass('hidden');
+                });
+
+                mediaFrame.open();
+            });
+
+            $(document).on('click', removeClass, function (event) {
+                event.preventDefault();
+
+                const slide = $(this).closest('.slide-home-fields');
+                slide.find(inputClass).val('');
+                slide.find(previewClass).attr('src', '').addClass('hidden');
+                slide.find(containerClass).addClass('hidden');
+            });
+        }
+
+        // Ajout dynamique de slides
+        $(document).on('click', '.add-slide-home', function (event) {
+            event.preventDefault();
+
+            const sliderContainer = $(this).siblings('.slider-home-slides');
+            const slideCount = sliderContainer.children('.slide-home-fields').length;
+
+            if (slideCount < 4) {
+                const templateSlide = sliderContainer.children('.slide-home-fields').first();
+                const newSlide = templateSlide.clone();
+
+                // Réinitialiser les valeurs du nouveau slide
+                newSlide.find('input, select, textarea').each(function () {
+                    const input = $(this);
+                    input.val(''); // Réinitialise la valeur
+                    if (input.is(':checkbox')) {
+                        input.prop('checked', false); // Réinitialise les checkbox
+                    }
+                });
+
+                newSlide.find('.bg-image-preview').attr('src', '').addClass('hidden');
+                newSlide.find('.bg-image-container').addClass('hidden');
+                newSlide.find('.extra-image-preview').attr('src', '').addClass('hidden');
+                newSlide.find('.extra-image-container').addClass('hidden');
+
+                sliderContainer.append(newSlide);
+
+                // Mettre à jour les indices
+                updateSlideIndices(sliderContainer);
+
+                // Initialiser les nouveaux champs
+                toggleBackgroundFields(newSlide);
+                toggleButtonOptions(newSlide);
             }
         });
-    }
 
+        // Vérifie si une image est déjà présente pour chaque slide
+        function initializeImageFields(slide) {
+            slide.find('.bg-image-url').each(function () {
+                const input = $(this);
+                const preview = slide.find('.bg-image-preview');
+                const container = slide.find('.bg-image-container');
 
-    // Mise à jour des boutons de navigation : désactiver si un seul slide
-    function updateNavButtons() {
-        if (totalSlides <= 1) {
-            $('.galigeo-slide-home-prev, .galigeo-slide-home-next').hide();
-        } else {
-            $('.galigeo-slide-home-prev, .galigeo-slide-home-next').show();
-        }
-    }
-
-    // Ajout de slides dynamiquement (exemple d'ajout de slides comme dans ton code initial)
-    builderContainer.on('click', '.add-slide-home', function(e) {
-        e.preventDefault();
-
-        const sliderContainer = $(this).siblings('.slider-home-slides');
-        const blockIndex = sliderContainer.closest('.builder-block').data('index');
-        const slideCount = sliderContainer.children().length;
-        // alert(blockIndex);
-        // alert(slideCount);
-
-        if (slideCount < 4) {
-            const newSlide = $('#slide-home-template').html()
-                .replace(/BLOCK_INDEX/g, blockIndex)
-                .replace(/SLIDE_INDEX/g, slideCount);
-            
-            sliderContainer.append(newSlide);
-            updateSlideButtons(sliderContainer);
-            updateSlideNumbers(sliderContainer);
-        }
-    });
-
-    // Suppression de slides
-    builderContainer.on('click', '.remove-slide-home', function(e) {
-        e.preventDefault();
-        const slideContainer = $(this).closest('.slide-home-fields');
-        const sliderContainer = slideContainer.parent();
-        slideContainer.remove();
-        updateSlideButtons(sliderContainer);
-        updateSlideNumbers(sliderContainer);
-    });
-
-    // Fonction pour gérer le type de background (image ou couleur)
-    builderContainer.on('change', '.bg-type-select', function() {
-        const bgType = $(this).val();
-        const slideField = $(this).closest('.slide-home-fields');
-        slideField.find('.bg-color-field').toggle(bgType === 'color');
-        slideField.find('.bg-image-field').toggle(bgType === 'image');
-    });
-
-    // Gestion de l'affichage du bouton dans le slide
-    builderContainer.on('change', 'input[name$="[show_button]"]', function() {
-        $(this).closest('.slide-home-fields').find('.button-options').toggle(this.checked);
-    });
-
-    function updateSlideButtons(sliderContainer) {
-        const slideCount = sliderContainer.children().length;
-        sliderContainer.siblings('.add-slide-home').prop('disabled', slideCount >= 4);
-        sliderContainer.find('.remove-slide-home').toggle(slideCount > 1);
-    }
-
-    function updateSlideNumbers(sliderContainer) {
-        sliderContainer.children().each(function(index) {
-            $(this).find('.slide-home-number').text(index + 1);
-            $(this).find('input, select, textarea').each(function() {
-                const name = $(this).attr('name');
-                if (name) {
-                    $(this).attr('name', name.replace(/\[slides\]\[\d+\]/, '[slides][' + index + ']'));
+                if (input.val()) {
+                    preview.attr('src', input.val()).removeClass('hidden');
+                    container.removeClass('hidden');
                 }
             });
-        });
-    }    
 
-    // Initialiser le slider à l'affichage
-    initializeSlider();
-}
+            slide.find('.extra-image-url').each(function () {
+                const input = $(this);
+                const preview = slide.find('.extra-image-preview');
+                const container = slide.find('.extra-image-container');
 
-/* Gestion de la suppression dynamique des images */
-const removeImgButtons = document.querySelectorAll('.slider-home-remove-img');
-
-removeImgButtons.forEach(button => {
-    button.addEventListener('click', function () {
-        alert('ok');
-        const ImgContainer = this.closest('.relative');
-        const ImgIndex = this.getAttribute('data-img-index');
-
-        // Masquer l'image et le bouton
-        ImgContainer.style.display = 'none';
-
-        // Désactiver l'input correspondant pour qu'il ne soit pas envoyé dans le formulaire
-        const hiddenInput = ImgContainer.querySelector('input[type="hidden"]');
-        if (hiddenInput) {
-            hiddenInput.disabled = true;
+                if (input.val()) {
+                    preview.attr('src', input.val()).removeClass('hidden');
+                    container.removeClass('hidden');
+                }
+            });
         }
-    });
-});
 
-// Appel de la fonction lorsque la page est prête
-// jQuery(document).ready(function($) {
-//     const builderContainer = $('#builder-container');
-//     admin_slider_home_scripts($, builderContainer);
-// });
+        // Suppression dynamique de slides
+        $(document).on('click', '.remove-slide-home', function (event) {
+            event.preventDefault();
+
+            const slide = $(this).closest('.slide-home-fields');
+            const sliderContainer = slide.parent();
+            slide.remove();
+
+            // Mettre à jour les indices après suppression
+            updateSlideIndices(sliderContainer);
+        });
+
+        // Gestion des événements
+        $(document).on('change', '.bg-type-select', function () {
+            const slide = $(this).closest('.slide-home-fields');
+            console.dir(slide);
+            toggleBackgroundFields(slide);
+        });
+
+        $(document).on('change', 'input[name$="[show_button]"]', function () {
+            const slide = $(this).closest('.slide-home-fields');
+            toggleButtonOptions(slide);
+        });
+
+        // Gestion des modals pour chaque type d'image
+        handleMediaFrame(
+            '.bg-image-selector',
+            '.bg-image-url',
+            '.bg-image-preview',
+            '.bg-image-container',
+            '.remove-bg-image'
+        );
+
+        handleMediaFrame(
+            '.extra-image-selector',
+            '.extra-image-url',
+            '.extra-image-preview',
+            '.extra-image-container',
+            '.remove-extra-image'
+        );
+
+        // Initialisation lors du chargement de la page
+        $('.slider-home-slides .slide-home-fields').each(function () {
+            const slide = $(this);
+            toggleBackgroundFields(slide);
+            toggleButtonOptions(slide);
+            initializeImageFields(slide);
+        });
+    });
+})(jQuery);

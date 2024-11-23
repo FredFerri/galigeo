@@ -2,7 +2,7 @@ function admin_text_block_scripts($, builderContainer) {
 
     jQuery(document).ready(function ($) {
         // Vérifier si un bloc "Texte" est présent sur la page
-        if (jQuery('.builder-block[data-type="texte"]').length > 0) {
+        if (jQuery('.text-block').length > 0) {
             $(document).on('click', '.add-text-button', function (e) {
                 e.preventDefault();
 

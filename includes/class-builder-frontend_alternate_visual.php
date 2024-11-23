@@ -42,12 +42,12 @@ class Alternate_Visual_Block_Frontend {
 
         // Titre
         if ($title) {
-            $output .= "<$title_tag class='av_title text-3xl font-bold'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='av_title galigeo-title text-3xl font-bold'>" . esc_html($title) . "</$title_tag>";
         }
 
         // Sous-titre
         if ($subtitle) {
-            $output .= '<h3 class="av_subtitle text-2xl font-semibold">' . esc_html($subtitle) . '</h3>';
+            $output .= '<h3 class="av_subtitle galigeo-subtitle text-2xl font-semibold">' . esc_html($subtitle) . '</h3>';
         }
 
         // Paragraphe

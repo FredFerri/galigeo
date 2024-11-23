@@ -2,7 +2,7 @@
 class Call_To_Action_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="cta-block bg-white shadow-md rounded-lg p-6 mb-6 builder-block">
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -16,7 +16,7 @@ class Call_To_Action_Block {
                     <?php
                     $title_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
                     foreach ($title_tags as $tag) {
-                        echo '<option value="' . $tag . '"' . selected($data['title_tag'] ?? 'h2', $tag, false) . '>' . $tag . '</option>';
+                        echo '<option value="' . esc_attr($tag) . '"' . selected($data['title_tag'] ?? 'h2', $tag, false) . '>' . esc_html($tag) . '</option>';
                     }
                     ?>
                 </select>
@@ -38,7 +38,7 @@ class Call_To_Action_Block {
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Couleur du texte de description :</label>
                 <input type="color" name="builder_blocks[<?php echo $index; ?>][data][description_color]" value="<?php echo esc_attr($data['description_color'] ?? '#000000'); ?>" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-10 w-20">
-            </div>
+            </div>            
 
             <!-- Type de background -->
             <div class="mb-4">
@@ -58,12 +58,36 @@ class Call_To_Action_Block {
             <!-- Image de background -->
             <div class="mb-4 bg-image-field <?php echo ($data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
-                <input type="file" name="builder_blocks[<?php echo $index; ?>][data][bg_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <?php if (!empty($data['bg_image'])) : ?>
-                    <img src="<?php echo esc_url($data['bg_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
-                <?php endif; ?>
-            </div>
+                <!-- Bouton pour choisir ou uploader une image -->
+                <button type="button" class="image-selector-button bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
 
+                <!-- Champ caché pour stocker l'URL de l'image -->
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][bg_image]" value="<?php echo esc_url($data['bg_image'] ?? ''); ?>" class="bg-image-url">
+
+                <!-- Affichage de l'image sélectionnée -->
+                <div class="mt-4">
+                    <?php if (!empty($data['bg_image'])) : ?>
+                        <div class="relative bg-image-container">
+                            <img src="<?php echo esc_url($data['bg_image']); ?>" alt="Background actuel" class="bg-image-preview max-w-xs">
+                            <!-- Bouton de suppression -->
+                            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-bg-image">
+                                &times;
+                            </button>
+                        </div>
+                    <?php else : ?>
+                        <div class="relative bg-image-container hidden">
+                            <img src="" alt="Background actuel" class="bg-image-preview max-w-xs">
+                            <!-- Bouton de suppression -->
+                            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-bg-image">
+                                &times;
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <script type="text/template" id="cta-button-template-<?php echo esc_attr($index); ?>">
+            <?php $this->render_cta_button_fields($index, 'BUTTON_INDEX', []); ?>
+            </script>
             <!-- Boutons -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Boutons :</label>
@@ -80,13 +104,11 @@ class Call_To_Action_Block {
                         Ajouter un bouton
                     </button>
                 <?php endif; ?>
-            </div>
+            </div>            
         </div>
-        <script type="text/template" id="cta-button-template-<?php echo esc_attr($index); ?>">
-            <?php $this->render_cta_button_fields($index, 'BUTTON_INDEX', []); ?>
-        </script>
         <?php
     }
+
 
     private function render_cta_button_fields($block_index, $button_index, $button_data) {
         $button_index = intval($button_index);
@@ -130,23 +152,7 @@ class Call_To_Action_Block {
         );
 
         // Gestion de l'image de background
-        if ($data['bg_type'] === 'image') {
-            if (!empty($_FILES['builder_blocks']['name'][$index]['data']['bg_image'])) {
-                $file = array(
-                    'name'     => $_FILES['builder_blocks']['name'][$index]['data']['bg_image'],
-                    'type'     => $_FILES['builder_blocks']['type'][$index]['data']['bg_image'],
-                    'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['bg_image'],
-                    'error'    => $_FILES['builder_blocks']['error'][$index]['data']['bg_image'],
-                    'size'     => $_FILES['builder_blocks']['size'][$index]['data']['bg_image']
-                );
-                $upload = $this->handle_image_upload($file, $post_id);
-                if ($upload && !is_wp_error($upload)) {
-                    $sanitized_data['bg_image'] = $upload['url'];
-                }
-            } elseif (!empty($data['bg_image'])) {
-                $sanitized_data['bg_image'] = esc_url_raw($data['bg_image']);
-            }
-        }
+        $sanitized_data['bg_image'] = esc_url_raw($data['bg_image'] ?? '');
 
         // Gestion des boutons
         $sanitized_data['buttons'] = array();

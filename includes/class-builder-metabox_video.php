@@ -2,7 +2,7 @@
 class Video_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="video-block bg-white shadow-md rounded-lg p-6 mb-6">
             <p class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">URL de la vidéo :</label>
                 <input type="url" name="builder_blocks[<?php echo $index; ?>][data][url]" value="<?php echo esc_url($data['url'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">

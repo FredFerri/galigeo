@@ -2,15 +2,14 @@
 class Testimonials_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="testimonials-block bg-white shadow-md rounded-lg p-6 mb-6">
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4">Configuration des Témoignages</h3>
-                <div class="testimonials-slides" data-block-index="<?php echo $index; ?>">
+                <div class="testimonials-slides">
                     <?php
                     $testimonials = $data['testimonials'] ?? [[]];
-                    var_dump($testimonials);
-                    foreach ($testimonials as $testimony_index => $testimony) {
-                        $this->render_testimonial_fields($index, $testimony_index, $testimony);
+                    foreach ($testimonials as $testimonial_index => $testimonial) {
+                        $this->render_testimonial_fields($index, $testimonial_index, $testimonial);
                     }
                     ?>
                 </div>
@@ -27,7 +26,6 @@ class Testimonials_Block {
     }
 
     private function render_testimonial_fields($block_index, $testimonial_index, $testimonial_data) {
-        $testimonial_index = intval($testimonial_index);
         ?>
         <div class="testimonial-fields bg-gray-100 p-4 rounded-md mb-4">
             <h4 class="font-semibold mb-2">Témoignage <span class="testimonial-number"><?php echo esc_html($testimonial_index + 1); ?></span></h4>
@@ -53,56 +51,43 @@ class Testimonials_Block {
             <!-- Image -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image :</label>
-                <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][testimonials][<?php echo esc_attr($testimonial_index); ?>][image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <?php if (!empty($testimonial_data['image'])) : ?>
-                    <img src="<?php echo esc_url($testimonial_data['image']); ?>" alt="Image actuelle" class="mt-2 max-w-xs">
-                <?php endif; ?>
+                <button type="button" class="extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][testimonials][<?php echo esc_attr($testimonial_index); ?>][image]" value="<?php echo esc_url($testimonial_data['image'] ?? ''); ?>" class="extra-image-url">
+                <div class="extra-image-container <?php echo empty($testimonial_data['image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo esc_url($testimonial_data['image']); ?>" alt="Image actuelle" class="extra-image-preview max-w-xs">
+                    <button type="button" class="remove-extra-image bg-red-500 text-white p-1 rounded-full">&times;</button>
+                </div>
             </div>
+
+            <!-- Bouton de suppression -->
+            <button type="button" class="remove-testimonial mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                Supprimer ce témoignage
+            </button>
         </div>
         <?php
     }
 
+    public function sanitize($data, $post_id, $index) {
+        $sanitized_data = [];
 
-public function sanitize($data, $post_id, $index) {
-    $sanitized_data = [];
-
-    if (isset($data['testimonials']) && is_array($data['testimonials'])) {
-        // var_dump($data['testimonials']);
-        
-        foreach ($data['testimonials'] as $testimonial_index => $testimonial_data) {
-            $sanitized_testimonial = array(
-                'name'      => isset($testimonial_data['name']) ? sanitize_text_field($testimonial_data['name']) : '',
-                'position'  => isset($testimonial_data['position']) ? sanitize_text_field($testimonial_data['position']) : '',
-                'quote'     => isset($testimonial_data['quote']) ? wp_kses_post($testimonial_data['quote']) : '',
-            );
-
-            // Gestion de l'image
-            if (!empty($_FILES['builder_blocks']['name'][$index]['data']['testimonials'][$testimonial_index]['image'])) {
-                $file = array(
-                    'name'     => $_FILES['builder_blocks']['name'][$index]['data']['testimonials'][$testimonial_index]['image'],
-                    'type'     => $_FILES['builder_blocks']['type'][$index]['data']['testimonials'][$testimonial_index]['image'],
-                    'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['testimonials'][$testimonial_index]['image'],
-                    'error'    => $_FILES['builder_blocks']['error'][$index]['data']['testimonials'][$testimonial_index]['image'],
-                    'size'     => $_FILES['builder_blocks']['size'][$index]['data']['testimonials'][$testimonial_index]['image']
+        if (isset($data['testimonials']) && is_array($data['testimonials'])) {
+            foreach ($data['testimonials'] as $testimonial_index => $testimonial_data) {
+                $sanitized_testimonial = array(
+                    'name'      => isset($testimonial_data['name']) ? sanitize_text_field($testimonial_data['name']) : '',
+                    'position'  => isset($testimonial_data['position']) ? sanitize_text_field($testimonial_data['position']) : '',
+                    'quote'     => isset($testimonial_data['quote']) ? wp_kses_post($testimonial_data['quote']) : '',
                 );
-                $upload = $this->handle_image_upload($file, $post_id);
-                if ($upload && !is_wp_error($upload)) {
-                    $sanitized_testimonial['image'] = $upload['url'];
+
+                if (!empty($testimonial_data['image'])) {
+                    $sanitized_testimonial['image'] = esc_url_raw($testimonial_data['image']);
                 }
-            } elseif (!empty($testimonial_data['image'])) {
-                $sanitized_testimonial['image'] = esc_url_raw($testimonial_data['image']);
+
+                $sanitized_data['testimonials'][$testimonial_index] = $sanitized_testimonial;
             }
-
-            // Ajouter le témoignage traité au tableau des témoignages
-            $sanitized_data['testimonials'][$testimonial_index] = $sanitized_testimonial;
         }
+
+        return $sanitized_data;
     }
-    // var_dump($sanitized_data);
-    // die();
-    return $sanitized_data;
-}
-
-
 
     private function handle_image_upload($file, $post_id) {
         require_once(ABSPATH . 'wp-admin/includes/image.php');
@@ -138,4 +123,5 @@ public function sanitize($data, $post_id, $index) {
 
         return false;
     }
+
 }

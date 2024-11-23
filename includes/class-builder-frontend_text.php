@@ -16,12 +16,12 @@ class Text_Block_Frontend {
 
         // Titre
         if ($title) {
-            $output .= "<$title_tag class='galigeo-text-title text-3xl font-bold mb-4'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='galigeo-text-title galigeo-title text-3xl font-bold mb-4'>" . esc_html($title) . "</$title_tag>";
         }
 
         // Sous-titre
         if ($subtitle) {
-            $output .= "<$subtitle_tag class='galigeo-text-subtitle text-2xl font-semibold mb-4'>" . esc_html($subtitle) . "</$subtitle_tag>";
+            $output .= "<$subtitle_tag class='galigeo-text-subtitle galigeo-subtitle text-2xl font-semibold mb-4'>" . esc_html($subtitle) . "</$subtitle_tag>";
         }
 
         // Description

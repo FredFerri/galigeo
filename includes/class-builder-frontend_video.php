@@ -1,6 +1,7 @@
 <?php
 class Video_Block_Frontend {
     public function render($data) {
+        var_dump($data);
         $output = '';
         $video_url = $data['url'] ?? '';
         $video_title = $data['title'] ?? '';
@@ -14,7 +15,7 @@ class Video_Block_Frontend {
         if ($video_url) {
             $output .= '<div class="galigeo-builder-video mb-8 compressed-width flex flex-col">';
             if ($video_title) {
-                $output .= "<{$title_tag} class=\"video-title text-2xl font-bold mb-4 galigeo-bleu text-center\">" . esc_html($video_title) . "</{$title_tag}>";
+                $output .= "<{$title_tag} class=\"galigeo-title video-title text-2xl font-bold mb-4 galigeo-bleu text-center\">" . esc_html($video_title) . "</{$title_tag}>";
             }
             $output .= '<div class="video-container relative pb-9/16 w-3/4 m-auto">' . wp_oembed_get($video_url, array('width' => 800)) . '</div>';
             if ($video_description) {

@@ -2,7 +2,7 @@
 class Slider_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="slider-block bg-white shadow-md rounded-lg p-6 mb-6">
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4">Configuration du Slider</h3>
                 <div class="slider-slides" data-block-index="<?php echo $index; ?>">

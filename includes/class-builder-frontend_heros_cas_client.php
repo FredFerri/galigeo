@@ -24,7 +24,7 @@ class Heros_Cas_Client_Block_Frontend {
             $output .= '<p class="hero-success-story">' . esc_html($success_story) . '</p>';
         }
         if ($title) {
-            $output .= "<$title_tag class='hero-title'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='hero-title galigeo-title'>" . esc_html($title) . "</$title_tag>";
         }
         if ($description) {
             $output .= '<p class="hero-description">' . wp_kses_post($description) . '</p>';

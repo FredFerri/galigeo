@@ -18,11 +18,11 @@ class Call_To_Action_Block_Frontend {
         $output .= '<div class="container mx-auto px-4 text-center">';
         
         if ($title) {
-            $output .= "<$title_tag class='text-3xl font-bold mb-8'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='text-3xl font-bold mb-8 galigeo-title'>" . esc_html($title) . "</$title_tag>";
         }
         
         if ($description) {
-            $output .= '<p class="mb-8" style="font-size: ' . esc_attr($description_font_size) . 'px; color: ' . esc_attr($description_color) . ';">' . wp_kses_post($description) . '</p>';
+            $output .= '<p class="mb-8 galigeo-subtitle" style="font-size: ' . esc_attr($description_font_size) . 'px; color: ' . esc_attr($description_color) . ';">' . wp_kses_post($description) . '</p>';
         }
         
         if (!empty($buttons)) {

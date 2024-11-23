@@ -2,7 +2,7 @@
 class Heros_Cas_Client_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="heros-cas-client-block bg-white shadow-md rounded-lg p-6 mb-6 builder-block">
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -26,7 +26,7 @@ class Heros_Cas_Client_Block {
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Texte "Success Story" :</label>
                 <input type="text" name="builder_blocks[<?php echo $index; ?>][data][success_story]" value="<?php echo esc_attr($data['success_story'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-            </div>            
+            </div>
 
             <!-- Description -->
             <div class="mb-4">
@@ -37,10 +37,12 @@ class Heros_Cas_Client_Block {
             <!-- Image principale -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image :</label>
-                <input type="file" name="builder_blocks[<?php echo $index; ?>][data][main_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <?php if (!empty($data['main_image'])) : ?>
-                    <img src="<?php echo esc_url($data['main_image']); ?>" alt="Image actuelle" class="mt-2 max-w-xs">
-                <?php endif; ?>
+                <button type="button" class="main-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][main_image]" value="<?php echo esc_url($data['main_image'] ?? ''); ?>" class="main-image-url">
+                <div class="mt-4 main-image-container <?php echo empty($data['main_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo esc_url($data['main_image']); ?>" alt="Image actuelle" class="main-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full remove-main-image">&times;</button>
+                </div>
             </div>
 
             <!-- Type de background -->
@@ -61,10 +63,12 @@ class Heros_Cas_Client_Block {
             <!-- Image de background -->
             <div class="mb-4 bg-image-field <?php echo ($data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
-                <input type="file" name="builder_blocks[<?php echo $index; ?>][data][bg_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <?php if (!empty($data['bg_image'])) : ?>
-                    <img src="<?php echo esc_url($data['bg_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
-                <?php endif; ?>
+                <button type="button" class="bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][bg_image]" value="<?php echo esc_url($data['bg_image'] ?? ''); ?>" class="bg-image-url">
+                <div class="mt-4 bg-image-container <?php echo empty($data['bg_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo esc_url($data['bg_image']); ?>" alt="Background actuel" class="bg-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full remove-bg-image">&times;</button>
+                </div>
             </div>
         </div>
         <?php
@@ -72,50 +76,27 @@ class Heros_Cas_Client_Block {
 
     public function sanitize($data, $post_id, $index) {
         $sanitized_data = array(
-            'title' => isset($data['title']) ? sanitize_text_field($data['title']) : '',
-            'title_tag' => isset($data['title_tag']) ? sanitize_text_field($data['title_tag']) : 'h2',
-            'description' => isset($data['description']) ? wp_kses_post($data['description']) : '',
-            'bg_type' => isset($data['bg_type']) ? sanitize_text_field($data['bg_type']) : 'color',
-            'bg_color' => isset($data['bg_color']) ? sanitize_hex_color($data['bg_color']) : '#ffffff',
-            'success_story' => isset($data['success_story']) ? sanitize_text_field($data['success_story']) : '',
+            'title' => sanitize_text_field($data['title'] ?? ''),
+            'title_tag' => sanitize_text_field($data['title_tag'] ?? 'h2'),
+            'description' => wp_kses_post($data['description'] ?? ''),
+            'success_story' => sanitize_text_field($data['success_story'] ?? ''),
+            'bg_type' => sanitize_text_field($data['bg_type'] ?? 'color'),
+            'bg_color' => sanitize_hex_color($data['bg_color'] ?? '#ffffff'),
         );
 
-        // Gestion des images
-        if (!empty($_FILES['builder_blocks']['name'][$index]['data']['main_image'])) {
-            $file = array(
-                'name' => $_FILES['builder_blocks']['name'][$index]['data']['main_image'],
-                'type' => $_FILES['builder_blocks']['type'][$index]['data']['main_image'],
-                'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['main_image'],
-                'error' => $_FILES['builder_blocks']['error'][$index]['data']['main_image'],
-                'size' => $_FILES['builder_blocks']['size'][$index]['data']['main_image']
-            );
-            $upload = $this->handle_image_upload($file, $post_id);
-            if ($upload && !is_wp_error($upload)) {
-                $sanitized_data['main_image'] = $upload['url'];
-            }
-        } elseif (!empty($data['main_image'])) {
-            $sanitized_data['main_image'] = esc_url_raw($data['main_image']);
-        }
-
-        if ($data['bg_type'] === 'image') {
-            if (!empty($_FILES['builder_blocks']['name'][$index]['data']['bg_image'])) {
-                $file = array(
-                    'name' => $_FILES['builder_blocks']['name'][$index]['data']['bg_image'],
-                    'type' => $_FILES['builder_blocks']['type'][$index]['data']['bg_image'],
-                    'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['bg_image'],
-                    'error' => $_FILES['builder_blocks']['error'][$index]['data']['bg_image'],
-                    'size' => $_FILES['builder_blocks']['size'][$index]['data']['bg_image']
-                );
-                $upload = $this->handle_image_upload($file, $post_id);
-                if ($upload && !is_wp_error($upload)) {
-                    $sanitized_data['bg_image'] = $upload['url'];
-                }
-            } elseif (!empty($data['bg_image'])) {
-                $sanitized_data['bg_image'] = esc_url_raw($data['bg_image']);
-            }
+        $sanitized_data['main_image'] = $this->sanitize_image($data, 'main_image', $post_id, $index);
+        if ($sanitized_data['bg_type'] === 'image') {
+            $sanitized_data['bg_image'] = $this->sanitize_image($data, 'bg_image', $post_id, $index);
         }
 
         return $sanitized_data;
+    }
+
+    private function sanitize_image($data, $key, $post_id, $index) {
+        if (!empty($data[$key])) {
+            return esc_url_raw($data[$key]);
+        }
+        return '';
     }
 
     private function handle_image_upload($file, $post_id) {
@@ -127,26 +108,18 @@ class Heros_Cas_Client_Block {
         $uploaded_file = wp_handle_upload($file, $upload_overrides);
 
         if ($uploaded_file && !isset($uploaded_file['error'])) {
-            $file_name = basename($file['name']);
-            $file_type = wp_check_filetype($file_name);
-
-            $attachment_data = array(
-                'post_mime_type' => $file_type['type'],
-                'post_title' => preg_replace('/\.[^.]+$/', '', $file_name),
+            $attachment_id = wp_insert_attachment([
+                'post_mime_type' => $uploaded_file['type'],
+                'post_title' => preg_replace('/\.[^.]+$/', '', basename($uploaded_file['file'])),
                 'post_content' => '',
                 'post_status' => 'inherit'
-            );
-
-            $attachment_id = wp_insert_attachment($attachment_data, $uploaded_file['file'], $post_id);
+            ], $uploaded_file['file'], $post_id);
 
             if (!is_wp_error($attachment_id)) {
-                $attachment_metadata = wp_generate_attachment_metadata($attachment_id, $uploaded_file['file']);
-                wp_update_attachment_metadata($attachment_id, $attachment_metadata);
-
-                return array(
-                    'id' => $attachment_id,
-                    'url' => $uploaded_file['url']
-                );
+                require_once(ABSPATH . 'wp-admin/includes/image.php');
+                $metadata = wp_generate_attachment_metadata($attachment_id, $uploaded_file['file']);
+                wp_update_attachment_metadata($attachment_id, $metadata);
+                return $uploaded_file['url'];
             }
         }
 

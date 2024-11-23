@@ -24,12 +24,12 @@ class Slider_Home_Block_Frontend {
 
             // Titre
             if ($title) {
-                $output .= "<$title_tag class='galigeo-slide-home-title'>" . esc_html($title) . "</$title_tag>";
+                $output .= "<$title_tag class='galigeo-slide-home-title galigeo-title'>" . esc_html($title) . "</$title_tag>";
             }
 
             // Sous-titre
             if ($subtitle) {
-                $output .= '<p class="galigeo-slide-home-subtitle">' . esc_html($subtitle) . '</p>';
+                $output .= '<p class="galigeo-slide-home-subtitle galigeo-subtitle">' . esc_html($subtitle) . '</p>';
             }
 
             // Bouton

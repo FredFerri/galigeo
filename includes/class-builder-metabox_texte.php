@@ -2,7 +2,7 @@
 class Text_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="text-block bg-white shadow-md rounded-lg p-6 mb-6">
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -124,7 +124,7 @@ class Text_Block {
 
 
     public function sanitize($data, $post_id, $index) {
-        var_dump($data);
+        // var_dump($data);
         $sanitized_data = array(
             'title' => isset($data['title']) ? sanitize_text_field($data['title']) : '',
             'title_tag' => isset($data['title_tag']) ? sanitize_text_field($data['title_tag']) : 'h2',

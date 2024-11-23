@@ -11,6 +11,7 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_contact.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_testimonials.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_logos.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_heros_cas_client.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_faq.php';
 
 class Builder_Frontend {
     private $blocks;
@@ -28,7 +29,8 @@ class Builder_Frontend {
             'contact' => new Contact_Block_Frontend(),
             'testimonials' => new Testimonials_Block_Frontend(),
             'logos_carousel' => new Logos_Carousel_Block_Frontend(),
-            'heros_cas_client' => new Heros_Cas_Client_Block_Frontend()
+            'heros_cas_client' => new Heros_Cas_Client_Block_Frontend(),
+            'faq' => new FAQ_Block_Frontend()
         ];
 
         add_filter('the_content', array($this, 'display_builder_content'));
@@ -45,7 +47,7 @@ class Builder_Frontend {
 
     private function get_builder_content($post_id) {
         $blocks = get_post_meta($post_id, '_builder_blocks', true);
-        var_dump($blocks);
+        // var_dump($blocks);
         $output = '';
         if (!empty($blocks)) {
             foreach ($blocks as $block) {

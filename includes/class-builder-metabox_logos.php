@@ -2,7 +2,7 @@
 class Client_Carousel_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="client-carousel-block bg-white shadow-md rounded-lg p-6 mb-6 builder-block">
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -25,25 +25,21 @@ class Client_Carousel_Block {
             <!-- Upload des logos (jusqu'à 8) -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Uploader les logos (jusqu'à 8 fichiers) :</label>
-                <input type="file" name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos][]" accept="image/*" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                
-                <?php if (!empty($data['lc_logos']) && is_array($data['lc_logos'])) : ?>
-                    <div class="mt-4 grid grid-cols-4 gap-4 lc_logos_block">
-                        <?php foreach ($data['lc_logos'] as $logo_index => $logo) : ?>
-                            <div class="relative">
+                <button type="button" class="lc-logo-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner des logos</button>
+                <div class="mt-4 grid grid-cols-4 gap-4 lc-logos-container">
+                    <?php if (!empty($data['lc_logos']) && is_array($data['lc_logos'])) : ?>
+                        <?php foreach ($data['lc_logos'] as $logo) : ?>
+                            <div class="relative lc-logo-item">
                                 <img src="<?php echo esc_url($logo); ?>" alt="Logo" class="max-w-full h-auto">
-                                <!-- Bouton de suppression -->
-                                <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full lc-remove-logo" data-logo-index="<?php echo esc_attr($logo_index); ?>">
+                                <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full lc-remove-logo">
                                     &times;
                                 </button>
-                                <!-- Champ caché pour conserver le logo existant -->
-                                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos_existing][<?php echo esc_attr($logo_index); ?>]" value="<?php echo esc_url($logo); ?>">
+                                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos_existing][]" value="<?php echo esc_url($logo); ?>">
                             </div>
                         <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             </div>
-
 
             <!-- Option noir & blanc -->
             <div class="mb-4">
@@ -71,97 +67,63 @@ class Client_Carousel_Block {
             <!-- Image de background -->
             <div class="mb-4 lc_bg_image_field <?php echo ($data['lc_background_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
-                <input type="file" name="builder_blocks[<?php echo $index; ?>][data][lc_background_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                <?php if (!empty($data['lc_background_image'])) : ?>
-                    <img src="<?php echo esc_url($data['lc_background_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
-                <?php endif; ?>
+                <button type="button" class="lc-bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_background_image]" value="<?php echo esc_url($data['lc_background_image'] ?? ''); ?>" class="lc-bg-image-url">
+                <div class="mt-4 lc-bg-image-container <?php echo empty($data['lc_background_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo esc_url($data['lc_background_image']); ?>" alt="Background actuel" class="lc-bg-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full lc-remove-bg-image">&times;</button>
+                </div>
             </div>
         </div>
         <?php
     }
 
     public function sanitize($data, $post_id, $index) {
-    $sanitized_data = array(
-        'lc_title' => isset($data['lc_title']) ? sanitize_text_field($data['lc_title']) : '',
-        'lc_title_tag' => isset($data['lc_title_tag']) ? sanitize_text_field($data['lc_title_tag']) : 'h2',
-        'lc_black_white' => isset($data['lc_black_white']) ? 1 : 0,
-        'lc_background_type' => isset($data['lc_background_type']) ? sanitize_text_field($data['lc_background_type']) : 'color',
-        'lc_background_color' => isset($data['lc_background_color']) ? sanitize_hex_color($data['lc_background_color']) : '#ffffff',
-    );
+        $sanitized_data = [
+            'lc_title' => sanitize_text_field($data['lc_title'] ?? ''),
+            'lc_title_tag' => sanitize_text_field($data['lc_title_tag'] ?? 'h2'),
+            'lc_black_white' => isset($data['lc_black_white']) ? 1 : 0,
+            'lc_background_type' => sanitize_text_field($data['lc_background_type'] ?? 'color'),
+            'lc_background_color' => sanitize_hex_color($data['lc_background_color'] ?? '#ffffff'),
+        ];
 
-    // Gestion des logos (jusqu'à 8 fichiers)
-    $sanitized_data['lc_logos'] = array();
-
-    // Prendre en compte les logos existants (qui n'ont pas été supprimés)
-    if (!empty($data['lc_logos_existing'])) {
-        foreach ($data['lc_logos_existing'] as $existing_logo) {
-            if (!empty($existing_logo)) {
-                $sanitized_data['lc_logos'][] = esc_url_raw($existing_logo);
-            }
-        }
-    }
-
-    // Gestion des nouveaux uploads
-    if (!empty($_FILES['builder_blocks']['name'][$index]['data']['lc_logos'])) {
-        for ($i = 0; $i < count($_FILES['builder_blocks']['name'][$index]['data']['lc_logos']); $i++) {
-            if (!empty($_FILES['builder_blocks']['name'][$index]['data']['lc_logos'][$i])) {
-                $file = array(
-                    'name'     => $_FILES['builder_blocks']['name'][$index]['data']['lc_logos'][$i],
-                    'type'     => $_FILES['builder_blocks']['type'][$index]['data']['lc_logos'][$i],
-                    'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['lc_logos'][$i],
-                    'error'    => $_FILES['builder_blocks']['error'][$index]['data']['lc_logos'][$i],
-                    'size'     => $_FILES['builder_blocks']['size'][$index]['data']['lc_logos'][$i],
-                );
-                $upload = $this->handle_image_upload($file, $post_id);
-                if ($upload && !is_wp_error($upload)) {
-                    $sanitized_data['lc_logos'][] = $upload['url'];
+        // Gestion des logos
+        $sanitized_data['lc_logos'] = [];
+        if (!empty($data['lc_logos'])) {
+            $logos = json_decode(stripslashes($data['lc_logos']), true);
+            if (is_array($logos)) {
+                foreach ($logos as $logo) {
+                    $sanitized_data['lc_logos'][] = esc_url_raw($logo);
                 }
             }
         }
-    }
 
-    // Gestion de l'image de background
-    if ($data['lc_background_type'] === 'image') {
-        if (!empty($_FILES['builder_blocks']['name'][$index]['data']['lc_background_image'])) {
-            $file = array(
-                'name'     => $_FILES['builder_blocks']['name'][$index]['data']['lc_background_image'],
-                'type'     => $_FILES['builder_blocks']['type'][$index]['data']['lc_background_image'],
-                'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['lc_background_image'],
-                'error'    => $_FILES['builder_blocks']['error'][$index]['data']['lc_background_image'],
-                'size'     => $_FILES['builder_blocks']['size'][$index]['data']['lc_background_image']
-            );
-            $upload = $this->handle_image_upload($file, $post_id);
-            if ($upload && !is_wp_error($upload)) {
-                $sanitized_data['lc_background_image'] = $upload['url'];
-            }
-        } elseif (!empty($data['lc_background_image'])) {
-            $sanitized_data['lc_background_image'] = esc_url_raw($data['lc_background_image']);
+        // Gestion de l'image de background
+        if ($sanitized_data['lc_background_type'] === 'image') {
+            $sanitized_data['lc_background_image'] = esc_url_raw($data['lc_background_image'] ?? '');
         }
+
+        return $sanitized_data;
     }
-
-    return $sanitized_data;
-}
-
-
 
     private function handle_image_upload($file, $post_id) {
         require_once(ABSPATH . 'wp-admin/includes/image.php');
         require_once(ABSPATH . 'wp-admin/includes/file.php');
         require_once(ABSPATH . 'wp-admin/includes/media.php');
 
-        $upload_overrides = array('test_form' => false);
+        $upload_overrides = ['test_form' => false];
         $uploaded_file = wp_handle_upload($file, $upload_overrides);
 
         if ($uploaded_file && !isset($uploaded_file['error'])) {
-            $file_name = basename($file['name']);
+            $file_name = basename($uploaded_file['file']);
             $file_type = wp_check_filetype($file_name);
 
-            $attachment_data = array(
+            $attachment_data = [
                 'post_mime_type' => $file_type['type'],
-                'post_title'     => preg_replace('/\.[^.]+$/', '', $file_name),
-                'post_content'   => '',
-                'post_status'    => 'inherit'
-            );
+                'post_title' => preg_replace('/\.[^.]+$/', '', $file_name),
+                'post_content' => '',
+                'post_status' => 'inherit',
+            ];
 
             $attachment_id = wp_insert_attachment($attachment_data, $uploaded_file['file'], $post_id);
 
@@ -169,10 +131,7 @@ class Client_Carousel_Block {
                 $attachment_metadata = wp_generate_attachment_metadata($attachment_id, $uploaded_file['file']);
                 wp_update_attachment_metadata($attachment_id, $attachment_metadata);
 
-                return array(
-                    'id'  => $attachment_id,
-                    'url' => $uploaded_file['url']
-                );
+                return ['id' => $attachment_id, 'url' => $uploaded_file['url']];
             }
         }
 

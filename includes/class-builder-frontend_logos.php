@@ -21,7 +21,7 @@ class Logos_Carousel_Block_Frontend {
 
         // Afficher le titre
         if ($title) {
-            $output .= "<$title_tag class='galigeo-logo-carousel-title'>" . esc_html($title) . "</$title_tag>";
+            $output .= "<$title_tag class='galigeo-logo-carousel-title galigeo-title'>" . esc_html($title) . "</$title_tag>";
         }
 
         $output .= '<div class="galigeo-logo-carousel">';

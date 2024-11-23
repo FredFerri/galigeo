@@ -2,10 +2,10 @@
 class Slider_Home_Block {
     public function render($data, $index) {
         ?>
-        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div class="slider-home-block bg-white shadow-md rounded-lg p-6 mb-6">
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4">Configuration du Home Slider</h3>
-                <div class="slider-home-slides" data-block-index="<?php echo $index; ?>">
+                <div class="slider-home-slides">
                     <?php
                     $slides = $data['slides'] ?? [[]];
                     foreach ($slides as $slide_index => $slide) {
@@ -26,11 +26,10 @@ class Slider_Home_Block {
     }
 
     private function render_slide_fields($block_index, $slide_index, $slide_data) {
-        $slide_index = intval($slide_index);
         ?>
         <div class="slide-home-fields bg-gray-100 p-4 rounded-md mb-4">
             <h4 class="font-semibold mb-2">Slide <span class="slide-home-number"><?php echo esc_html($slide_index + 1); ?></span></h4>
-            
+
             <!-- Titre du slide -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre du slide :</label>
@@ -55,11 +54,11 @@ class Slider_Home_Block {
                 </select>
             </div>
 
-            <!-- Sous-Titre du slide -->
+            <!-- Sous-titre -->
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Sous-titre du slide :</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sous-titre :</label>
                 <input type="text" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][subtitle]" value="<?php echo esc_attr($slide_data['subtitle'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-            </div>            
+            </div>
 
             <!-- Type de background -->
             <div class="mb-4">
@@ -79,19 +78,12 @@ class Slider_Home_Block {
             <!-- Image de background -->
             <div class="mb-4 bg-image-field <?php echo ($slide_data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
-                <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-
-                <!-- Champ caché pour conserver l'image de background existante -->
-                <?php if (!empty($slide_data['bg_image'])) : ?>
-                    <div class="relative inline-block">
-                        <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image_existing]" value="<?php echo esc_url($slide_data['bg_image']); ?>">
-                        <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Background actuel" class="mt-2 max-w-xs">
-                        <!-- Bouton de suppression -->
-                        <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-home-remove-img" data-logo-index="<?php echo esc_attr($slide_index); ?>">
-                        &times;
-                        </button>
-                    </div>
-                <?php endif; ?>
+                <button type="button" class="bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" value="<?php echo esc_url($slide_data['bg_image'] ?? ''); ?>" class="bg-image-url">
+                <div class="mt-4 bg-image-container <?php echo empty($slide_data['bg_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Background actuel" class="bg-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full remove-bg-image">&times;</button>
+                </div>
             </div>
 
             <!-- Checkbox pour le bouton -->
@@ -121,21 +113,15 @@ class Slider_Home_Block {
             <!-- Image supplémentaire -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image supplémentaire :</label>
-                <input type="file" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image]" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-
-                <!-- Champ caché pour conserver l'URL de l'image existante -->
-                <?php if (!empty($slide_data['extra_image'])) : ?>
-                    <div class="relative inline-block">
-                        <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image_existing]" value="<?php echo esc_url($slide_data['extra_image']); ?>">
-                        <img src="<?php echo esc_url($slide_data['extra_image']); ?>" alt="Image supplémentaire" class="mt-2 max-w-xs">
-                        <!-- Bouton de suppression -->
-                        <button type="button" class="absolute top-2 right-0 bg-red-500 text-white p-1 rounded-full slider-home-remove-img" data-logo-index="<?php echo esc_attr($slide_index); ?>">
-                            &times;
-                        </button>   
-                    </div>                 
-                <?php endif; ?>
+                <button type="button" class="extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image]" value="<?php echo esc_url($slide_data['extra_image'] ?? ''); ?>" class="extra-image-url">
+                <div class="mt-4 extra-image-container <?php echo empty($slide_data['extra_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo esc_url($slide_data['extra_image']); ?>" alt="Image supplémentaire" class="extra-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full remove-extra-image">&times;</button>
+                </div>
             </div>
 
+            <!-- Bouton de suppression -->
             <button type="button" class="remove-slide-home mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                 Supprimer ce slide
             </button>
@@ -161,39 +147,13 @@ class Slider_Home_Block {
                 );
 
                 // Gestion de l'image de background
-                if (!empty($_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['bg_image'])) {
-                    $file = array(
-                        'name'     => $_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['bg_image'],
-                        'type'     => $_FILES['builder_blocks']['type'][$index]['data']['slides'][$slide_index]['bg_image'],
-                        'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['slides'][$slide_index]['bg_image'],
-                        'error'    => $_FILES['builder_blocks']['error'][$index]['data']['slides'][$slide_index]['bg_image'],
-                        'size'     => $_FILES['builder_blocks']['size'][$index]['data']['slides'][$slide_index]['bg_image']
-                    );
-                    $upload = $this->handle_image_upload($file, $post_id);
-                    if ($upload && !is_wp_error($upload)) {
-                        $sanitized_slide['bg_image'] = $upload['url'];
-                    }
-                } elseif (!empty($slide_data['bg_image_existing'])) {
-                    // Si aucune nouvelle image de background n'est uploadée, conserver l'image existante
-                    $sanitized_slide['bg_image'] = esc_url_raw($slide_data['bg_image_existing']);
+                if (isset($slide_data['bg_image']) && !empty($slide_data['bg_image'])) {
+                    $sanitized_slide['bg_image'] = esc_url_raw($slide_data['bg_image']);
                 }
 
                 // Gestion de l'image supplémentaire
-                if (!empty($_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['extra_image'])) {
-                    $file = array(
-                        'name'     => $_FILES['builder_blocks']['name'][$index]['data']['slides'][$slide_index]['extra_image'],
-                        'type'     => $_FILES['builder_blocks']['type'][$index]['data']['slides'][$slide_index]['extra_image'],
-                        'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$index]['data']['slides'][$slide_index]['extra_image'],
-                        'error'    => $_FILES['builder_blocks']['error'][$index]['data']['slides'][$slide_index]['extra_image'],
-                        'size'     => $_FILES['builder_blocks']['size'][$index]['data']['slides'][$slide_index]['extra_image']
-                    );
-                    $upload = $this->handle_image_upload($file, $post_id);
-                    if ($upload && !is_wp_error($upload)) {
-                        $sanitized_slide['extra_image'] = $upload['url'];
-                    }
-                } elseif (!empty($slide_data['extra_image_existing'])) {
-                    // Si aucune nouvelle image supplémentaire n'est uploadée, conserver l'image existante
-                    $sanitized_slide['extra_image'] = esc_url_raw($slide_data['extra_image_existing']);
+                if (isset($slide_data['extra_image']) && !empty($slide_data['extra_image'])) {
+                    $sanitized_slide['extra_image'] = esc_url_raw($slide_data['extra_image']);
                 }
 
                 $sanitized_data['slides'][$slide_index] = $sanitized_slide;
@@ -201,6 +161,27 @@ class Slider_Home_Block {
         }
 
         return $sanitized_data;
+    }
+
+
+    private function sanitize_image($data, $key, $slide_index, $post_id, $block_index) {
+        // var_dump($_FILES['builder_blocks']['name']);
+        if (!empty($_FILES['builder_blocks']['name'][$block_index]['data']['slides'][$slide_index][$key])) {
+            $file = array(
+                'name'     => $_FILES['builder_blocks']['name'][$block_index]['data']['slides'][$slide_index][$key],
+                'type'     => $_FILES['builder_blocks']['type'][$block_index]['data']['slides'][$slide_index][$key],
+                'tmp_name' => $_FILES['builder_blocks']['tmp_name'][$block_index]['data']['slides'][$slide_index][$key],
+                'error'    => $_FILES['builder_blocks']['error'][$block_index]['data']['slides'][$slide_index][$key],
+                'size'     => $_FILES['builder_blocks']['size'][$block_index]['data']['slides'][$slide_index][$key]
+            );
+            $upload = $this->handle_image_upload($file, $post_id);
+            if ($upload && !is_wp_error($upload)) {
+                return $upload['url'];
+            }
+        } elseif (!empty($data["{$key}_existing"])) {
+            return esc_url_raw($data["{$key}_existing"]);
+        }
+        return '';
     }
 
     private function handle_image_upload($file, $post_id) {

@@ -1,5 +1,10 @@
 /* Règles générales */
 
+.galigeo-title, .galigeo-subtitle {
+    max-width: 40rem !important;
+    margin: 2rem auto !important;
+}
+
 .galigeo-bleu {
     color: #03234d;
 }
@@ -621,4 +626,11 @@
         max-width: 100%;
         text-align: center;
     }
+}
+
+/* CTA */
+
+.galigeo-cta .cta-btn > a:hover {
+    border : solid #2ecc71 1px;
+    box-shadow : 0 4px 4px rgba(0,0,0,0.16);
 }
