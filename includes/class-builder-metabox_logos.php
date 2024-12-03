@@ -22,10 +22,17 @@ class Client_Carousel_Block {
                 </select>
             </div>
 
-            <!-- Upload des logos (jusqu'à 8) -->
+            <!-- Upload de logos -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Uploader les logos (jusqu'à 8 fichiers) :</label>
-                <button type="button" class="lc-logo-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner des logos</button>
+                <!-- Bouton avec data-name pour indiquer où les données seront injectées -->
+                <button type="button" 
+                    class="lc-logo-selector bg-blue-500 text-white py-2 px-4 rounded mb-2" 
+                    data-name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos]">
+                    Ajouter ou sélectionner des logos
+                </button>
+
+                <!-- Conteneur pour les logos -->
                 <div class="mt-4 grid grid-cols-4 gap-4 lc-logos-container">
                     <?php if (!empty($data['lc_logos']) && is_array($data['lc_logos'])) : ?>
                         <?php foreach ($data['lc_logos'] as $logo) : ?>
@@ -34,12 +41,22 @@ class Client_Carousel_Block {
                                 <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full lc-remove-logo">
                                     &times;
                                 </button>
-                                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos_existing][]" value="<?php echo esc_url($logo); ?>">
+                                <input type="hidden" 
+                                    name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos][]" 
+                                    value="<?php echo esc_url($logo); ?>" 
+                                    data-name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos]">
                             </div>
                         <?php endforeach; ?>
+                    <?php else : ?>
+                        <!-- Placeholder invisible pour garantir que data-name existe dès le début -->
+                        <input type="hidden" 
+                            name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos][]" 
+                            value="" 
+                            data-name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_logos]">
                     <?php endif; ?>
                 </div>
             </div>
+
 
             <!-- Option noir & blanc -->
             <div class="mb-4">
@@ -90,10 +107,12 @@ class Client_Carousel_Block {
         // Gestion des logos
         $sanitized_data['lc_logos'] = [];
         if (!empty($data['lc_logos'])) {
-            $logos = json_decode(stripslashes($data['lc_logos']), true);
+            $logos = is_array($data['lc_logos']) ? $data['lc_logos'] : json_decode(stripslashes($data['lc_logos']), true);
             if (is_array($logos)) {
                 foreach ($logos as $logo) {
-                    $sanitized_data['lc_logos'][] = esc_url_raw($logo);
+                    if (!empty($logo)) { // Ignore les entrées vides
+                        $sanitized_data['lc_logos'][] = esc_url_raw($logo);
+                    }
                 }
             }
         }
@@ -102,7 +121,8 @@ class Client_Carousel_Block {
         if ($sanitized_data['lc_background_type'] === 'image') {
             $sanitized_data['lc_background_image'] = esc_url_raw($data['lc_background_image'] ?? '');
         }
-
+        // var_dump($sanitized_data);
+        // die();
         return $sanitized_data;
     }
 
