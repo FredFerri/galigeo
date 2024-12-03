@@ -12,6 +12,7 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_contact.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_testimonials.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_heros_cas_client.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_faq.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-metabox_cas_client.php';
 
 
 class Builder_Metabox {
@@ -31,7 +32,8 @@ class Builder_Metabox {
             'contact' => new Contact_Block(),
             'testimonials' => new Testimonials_Block(),
             'heros_cas_client' => new Heros_Cas_Client_Block(),
-            'faq' => new Faq_Block()
+            'faq' => new Faq_Block(),
+            'cas_client' => new Cas_Client_Block()
         ];
 
 
