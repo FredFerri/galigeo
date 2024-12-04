@@ -634,3 +634,89 @@
     border : solid #2ecc71 1px;
     box-shadow : 0 4px 4px rgba(0,0,0,0.16);
 }
+
+.galigeo-cas-client-block {
+    padding-top: 2.5rem;
+    background-color: #fff;
+}
+
+.galigeo-cas-client-title {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 5rem;
+    color: #03234D;
+    font-family: 'Montserrat';
+}
+
+.galigeo-cas-client-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.galigeo-cas-client-item {
+    flex: 1 1 calc(33.333% - 20px); /* Maximum 3 items par rangée pour desktop */
+    max-width: calc(33.333% - 20px);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.galigeo-cas-client-item img {
+    max-width: 100%;
+    border-radius: 8px;
+    height: 12rem;
+    margin: 0 auto 1rem;
+}
+
+.galigeo-cas-client-success-story {
+    font-size: 0.875rem;
+    font-family: 'Literata​ Bold';
+    font-weight: bold;
+    color: #2ECC71;
+    margin-bottom: 0.5rem;
+}
+
+.galigeo-cas-client-title a {
+    font-family: 'Montserrat';
+    text-decoration: none;
+    color: #03234D;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem
+}
+
+.galigeo-cas-client-excerpt {
+    font-size: 1.25rem;
+    font-family: 'Montserrat';
+    color: #909090;
+    height: 7.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.galigeo-cas-client-read-more-button {
+    background-color: #03234D;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-family: 'Montserrat';
+    font-size: 0.938rem;
+    padding: 0.75rem 1.5rem;
+}
+
+.galigeo-cas-client-read-more-button:hover {
+    background-color: #005bb5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .galigeo-cas-client-item {
+        flex: 1 1 calc(50% - 20px); /* 2 items par rangée pour tablettes */
+        max-width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .galigeo-cas-client-item {
+        flex: 1 1 100%; /* Empilement pour mobile */
+        max-width: 100%;
+    }
+}

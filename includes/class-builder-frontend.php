@@ -12,6 +12,7 @@ require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_testimonials.ph
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_logos.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_heros_cas_client.php';
 require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_faq.php';
+require_once plugin_dir_path(__FILE__) . 'class-builder-frontend_cas_client.php';
 
 class Builder_Frontend {
     private $blocks;
@@ -30,6 +31,7 @@ class Builder_Frontend {
             'testimonials' => new Testimonials_Block_Frontend(),
             'logos_carousel' => new Logos_Carousel_Block_Frontend(),
             'heros_cas_client' => new Heros_Cas_Client_Block_Frontend(),
+            'cas_client' => new Cas_Client_Block_Frontend(),
             'faq' => new FAQ_Block_Frontend()
         ];
 

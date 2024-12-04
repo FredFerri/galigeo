@@ -51,7 +51,7 @@ class Galigeo_Builder {
         wp_enqueue_script('builder-admin-import-html-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin_import_html.js', array('jquery'), '1.0', true);
         wp_enqueue_script('builder-admin-simple-columns-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin_simple_columns.js', array('jquery'), '1.0', true);
         wp_enqueue_script('builder-admin-faq-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin_faq.js', array('jquery'), '1.0', true);
-        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable', 'jquery-ui-dialog', 'builder-admin-slider-js', 'builder-admin-cta-js', 'builder-admin-video-js'), '1.0', true);
+        wp_enqueue_script('builder-admin-js', plugin_dir_url(__FILE__) . 'assets/js/builder-admin.js', '1.0', true);
         wp_localize_script('builder-admin-js', 'builderData', array(
             'nonce' => wp_create_nonce('builder_nonce')
         ));        

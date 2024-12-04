@@ -1,7 +1,7 @@
 <?php
 class Slider_Block_Frontend {
     public function render($data) {
-        var_dump($data);
+        // var_dump($data);
         $slides = $data['slides'] ?? [];
         // if (count($slides) < 2) return '';
 

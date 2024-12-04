@@ -35,7 +35,8 @@ jQuery(document).ready(function($) {
                   '<button class="button" data-type="contact">Contact</button>' +
                   '<button class="button" data-type="testimonials">Témoignages</button>' +
                   '<button class="button" data-type="heros_cas_client">Heros cas client</button>' +
-                  '<button class="button" data-type="faq">FAQ</button>'
+                  '<button class="button" data-type="faq">FAQ</button>' +
+                  '<button class="button" data-type="cas_client">Cas client</button>'
         }).dialog({
             modal: true,
             closeOnEscape: true,
@@ -184,3 +185,40 @@ jQuery(document).ready(function($) {
     });
 });
 
+// Code qui gère l'affichage d'un message de confirmation lorsqu'on quitte la page alors que des changements 
+// non sauvegardés sont en cours
+(function ($) {
+    $(document).ready(function () {
+        let isDirty = false;
+
+        // Détecter les changements dans les inputs, selects et textareas
+        $('#builder-container').on('input change', 'input, textarea, select', function () {
+            isDirty = true;
+        });
+
+        // Écouter l'événement avant de quitter la page
+        window.onbeforeunload = function (e) {
+            if (isDirty) {
+                // Message affiché par certains navigateurs
+                return "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter cette page ?";
+            }
+        };
+
+        // Écouter les clics sur les liens de navigation
+        $(document).on('click', 'a', function (e) {
+            if (isDirty) {
+                const confirmation = confirm(
+                    "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir quitter cette page ?"
+                );
+                if (!confirmation) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        // Réinitialiser le drapeau "isDirty" après la sauvegarde
+        $('#publish, #save-post').on('click', function () {
+            isDirty = false;
+        });
+    });
+})(jQuery);
