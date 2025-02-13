@@ -3,6 +3,14 @@ class Client_Carousel_Block {
     public function render($data, $index) {
         ?>
         <div class="client-carousel-block bg-white shadow-md rounded-lg p-6 mb-6 builder-block">
+
+            <!-- ID du block -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][lc_block_id]" value="<?php echo esc_attr($data['lc_block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>   
+
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -87,7 +95,7 @@ class Client_Carousel_Block {
                 <button type="button" class="lc-bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
                 <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][lc_background_image]" value="<?php echo esc_url($data['lc_background_image'] ?? ''); ?>" class="lc-bg-image-url">
                 <div class="mt-4 lc-bg-image-container <?php echo empty($data['lc_background_image']) ? 'hidden' : ''; ?>">
-                    <img src="<?php echo esc_url($data['lc_background_image']); ?>" alt="Background actuel" class="lc-bg-image-preview max-w-xs">
+                    <img src="<?php echo !empty($data['lc_background_image']) ? esc_url($data['lc_background_image']) : ''; ?>" alt="Background actuel" class="lc-bg-image-preview max-w-xs">
                     <button type="button" class="bg-red-500 text-white p-1 rounded-full lc-remove-bg-image">&times;</button>
                 </div>
             </div>
@@ -95,36 +103,51 @@ class Client_Carousel_Block {
         <?php
     }
 
-    public function sanitize($data, $post_id, $index) {
-        $sanitized_data = [
-            'lc_title' => sanitize_text_field($data['lc_title'] ?? ''),
-            'lc_title_tag' => sanitize_text_field($data['lc_title_tag'] ?? 'h2'),
-            'lc_black_white' => isset($data['lc_black_white']) ? 1 : 0,
-            'lc_background_type' => sanitize_text_field($data['lc_background_type'] ?? 'color'),
-            'lc_background_color' => sanitize_hex_color($data['lc_background_color'] ?? '#ffffff'),
-        ];
+public function sanitize($data, $post_id, $index) {
+    $sanitized_data = [
+        'lc_block_id' => sanitize_text_field($data['lc_block_id'] ?? ''),
+        'lc_title' => sanitize_text_field($data['lc_title'] ?? ''),
+        'lc_title_tag' => sanitize_text_field($data['lc_title_tag'] ?? 'h2'),
+        'lc_black_white' => isset($data['lc_black_white']) ? 1 : 0,
+        'lc_background_type' => sanitize_text_field($data['lc_background_type'] ?? 'color'),
+        'lc_background_color' => sanitize_hex_color($data['lc_background_color'] ?? '#ffffff'),
+    ];
 
-        // Gestion des logos
-        $sanitized_data['lc_logos'] = [];
-        if (!empty($data['lc_logos'])) {
-            $logos = is_array($data['lc_logos']) ? $data['lc_logos'] : json_decode(stripslashes($data['lc_logos']), true);
-            if (is_array($logos)) {
-                foreach ($logos as $logo) {
-                    if (!empty($logo)) { // Ignore les entrées vides
-                        $sanitized_data['lc_logos'][] = esc_url_raw($logo);
-                    }
+    // Gestion des logos
+    $sanitized_data['lc_logos'] = [];
+    if (!empty($data['lc_logos'])) {
+        $logos = is_array($data['lc_logos']) ? $data['lc_logos'] : json_decode(stripslashes($data['lc_logos']), true);
+        if (is_array($logos)) {
+            foreach ($logos as $logo) {
+                if (!empty($logo)) { // Ignore les entrées vides
+                    $sanitized_data['lc_logos'][] = esc_url_raw($logo);
                 }
             }
         }
-
-        // Gestion de l'image de background
-        if ($sanitized_data['lc_background_type'] === 'image') {
-            $sanitized_data['lc_background_image'] = esc_url_raw($data['lc_background_image'] ?? '');
-        }
-        // var_dump($sanitized_data);
-        // die();
-        return $sanitized_data;
     }
+
+    // Vérification du nombre minimum d'images
+    if (count($sanitized_data['lc_logos']) < 5) {
+        // Ajoute un message d'erreur dans le système d'administration de WordPress
+        add_settings_error(
+            'client_carousel_block', // ID de l'erreur
+            'lc_logos_error', // Code de l'erreur
+            'Vous devez ajouter au moins 5 images au carousel pour valider ce bloc.', // Message de l'erreur
+            'error' // Type d'erreur
+        );
+
+        // Ajoute des entrées par défaut ou réinitialise à un état vide
+        $sanitized_data['lc_logos'] = [];
+    }
+
+    // Gestion de l'image de background
+    if ($sanitized_data['lc_background_type'] === 'image') {
+        $sanitized_data['lc_background_image'] = esc_url_raw($data['lc_background_image'] ?? '');
+    }
+
+    return $sanitized_data;
+}
+
 
     private function handle_image_upload($file, $post_id) {
         require_once(ABSPATH . 'wp-admin/includes/image.php');

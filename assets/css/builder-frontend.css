@@ -1,8 +1,7 @@
 /* Règles générales */
 
 .galigeo-title, .galigeo-subtitle {
-    max-width: 40rem !important;
-    margin: 2rem auto !important;
+    margin: 2rem auto;
 }
 
 .galigeo-bleu {
@@ -32,11 +31,11 @@
     margin: 70px auto;
 }
 
-.galigeo-builder-video .video-title {
+.galigeo-builder-video .galigeo-video-title {
     margin-bottom: 10px;
 }
 
-.galigeo-builder-video .video-container {
+.galigeo-builder-video .galigeo-video-container {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 aspect ratio */
     height: 0;
@@ -45,7 +44,7 @@
     box-shadow: 0px 8px 24px -8px rgba(0, 0, 0, 0.25);
 }
 
-.galigeo-builder-video .video-container iframe {
+.galigeo-builder-video .galigeo-video-container iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -53,9 +52,18 @@
     height: 100%;
 }
 
-.galigeo-builder-video .video-description {
+.galigeo-builder-video .galigeo-video-description {
     margin-top: 10px;
 }
+
+@media all and (max-width: 768px) {
+    .galigeo-video-container {
+        margin-right: 20px;
+        margin-left: 20px;
+        width: auto !important;
+    }
+}
+
 
 /* Slider block */
 
@@ -70,7 +78,7 @@
 .galigeo-slider {
     position: relative;
     overflow: visible;
-    height: 400px; /* Ajustez selon vos besoins */
+    /*height: 400px;*/
 }
 
 .galigeo-slider-container {
@@ -93,9 +101,9 @@
     transition: transform 0.5s ease;
 }
 
-.galigeo-slide.active {
+/*.galigeo-slide.active {
     transform: scale(1);
-}
+}*/
 
 .galigeo-slide-content {
     color: white;
@@ -103,6 +111,7 @@
     display: flex;
     justify-content: space-between;
     gap: 40px;    
+    align-items: center;
 }
 
 .galigeo-slide-title {
@@ -118,6 +127,10 @@
     color: white;
     font-weight: bold;
     transition: opacity 0.3s ease;
+}
+
+.galigeo-slide-media {
+    max-width: 50%;
 }
 
 .galigeo-slide-button:hover {
@@ -144,6 +157,15 @@
 .galigeo-slider-prev { left: -5%; }
 .galigeo-slider-next { right: -5%; }
 
+@media all and (max-width: 768px) {
+    .galigeo-slider-wrapper {
+        width: 100%;
+    }
+
+    .galigeo-slide-title {
+        font-size: 1.2rem;
+    }
+}
 
 
 /* Slider Home */
@@ -169,22 +191,26 @@
 }
 
 .galigeo-slide-home {
-    flex: 0 0 100%; /* Le slide actif prend toute la largeur */
+    flex: 0 0 100%;
     background-size: cover;
     background-position: center;
     display: flex;
-    justify-content: center;
     align-items: center;
     padding: 2rem;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    justify-content: center;
+    /*box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);*/
+    /*margin: 0 2%;*/
     border-radius: 10px;
-    text-align: center;
-    transition: transform 0.5s ease;
+    /*transform: scale(0.9);  Par défaut, les slides sont dézoomées */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Ajout de l'animation */
+    opacity: 0.8; /* Définir une opacité réduite par défaut */
 }
 
 .galigeo-slide-home.active {
-    transform: translateX(0); /* Slide actif visible */
+    transform: scale(1); /* Zoom pour la slide active */
+    opacity: 1; /* Pleine opacité pour la slide active */
 }
+
 
 .galigeo-slide-home-content {
     max-width: 70%;
@@ -214,12 +240,12 @@
     color: white;
     font-family: Montserrat;
     font-size: 0.938rem;
-    background-color: #03234D !important;
-    transition: opacity 0.3s ease;
+    transition: box-shadow 0.3s ease;
 }
 
 .galigeo-slide-home-button:hover {
-    opacity: 0.9;
+    /*opacity: 0.9;*/
+    box-shadow: 2px 1px 5px #797979;
 }
 
 .galigeo-slide-home-image {
@@ -243,13 +269,14 @@
     z-index: 10;
 }
 
-.galigeo-slider-home-nav:hover, .testimonials-slider-nav:hover {
-    background: white;
+.galigeo-slider-home-prev, .testimonials-slider-prev,
+.galigeo-slider-home-next, .testimonials-slider-next {
+    opacity: 0.5;
 }
 
 .galigeo-slider-home-prev:hover, .testimonials-slider-prev:hover,
 .galigeo-slider-home-next:hover, .testimonials-slider-next:hover {
-    opacity: 0.5;
+    opacity: 1;
 }
 
 .galigeo-slider-home-prev, .testimonials-slider-prev {
@@ -274,6 +301,16 @@
     border-radius: 10px;
 }
 
+@media all and (max-width: 768px) {
+    .galigeo-slider-home-wrapper {
+        width: 100%;
+    }
+
+    .galigeo-slide-home {
+        border-radius: 0 !important;
+    }
+}
+
 /* Alternate visual */
 
 .av_alternate_visual_block {
@@ -285,6 +322,35 @@
 
 .av_alternate_visual_block > .container {
     gap: 4em;
+}
+
+.av_title {
+    color: #03234D;
+    font-family: 'Montserrat';
+    font-size: 1.75rem;
+    margin: 0 0 0.5rem;
+}
+
+.av_subtitle {
+    color: #909090;
+    font-family: 'Montserrat';
+    font-size: 1.125rem;
+    margin: 0 0 1.5rem
+}
+
+.av_button {
+    background-color: #03234D;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-family: 'Montserrat';
+    font-synthesis: 0.938rem;
+    padding: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.av_button:hover {
+    border-color: #2ecc71;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.16);
 }
 
 @media all and (max-width: 768px) {
@@ -305,15 +371,24 @@
     border-radius: 2rem;
     padding: 1.5rem;
     width: 100%;
-    align-items: center;
     justify-content: center;
     gap: 10px;
 }
 
+.galigeo-columns-subblock {
+    width: 80%;
+}
+
 .galigeo-columns-block .galigeo-column {
     background: #fff;
-    border-radius: 1.5rem;
+    border-radius: 1.5rem;
     padding: 1rem 1rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 32%;    
+    box-shadow: 1px 1px 10px 10px rgba(0, 0, 0, 0.03);
 }
 
 .galigeo-column-title {
@@ -325,23 +400,11 @@
 
 .galigeo-column-desc {
     font-family : 'Montserrat Regular';
-    font-size :  1.125rem;
-    color : #909090;
     margin-bottom: 1.5rem;
 }
 
 .galigeo-column-img {
     width: 250px !important;
-}
-
-.galigeo-column {
-    border-radius: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 32%;
-    height: 450px;
 }
 
 .galigeo-logo-carousel-image.black-white {
@@ -350,18 +413,29 @@
 }
 
 /* Optionnel : Effet de survol pour revenir en couleur */
-.galigeo-logo-carousel-image.black-white:hover {
+/*.galigeo-logo-carousel-image.black-white:hover {
     filter: grayscale(0%);
-}
+}*/
 
 @media all and (max-width: 768px) {
     .galigeo-columns-block {
         flex-direction: column;
+        align-items: center;
+    }
+
+    .galigeo-columns-subblock {
+        width: 100% !important;
     }
 
     .galigeo-column {
-        width: 90% !important;
+        width: auto !important;
     }
+
+    .galigeo-columns-subblock {
+        width: auto !important;
+        flex-direction: column;
+        gap: 40px;
+    }    
 }
 
 /* Text block */
@@ -369,9 +443,13 @@
 .galigeo-text-block {
     background: #F4F5F7;
     border-radius: 2rem !important;
-    padding: 1.5rem !important;
+    padding: 4rem !important;
     width: 100% !important;
     text-align: center !important;
+}
+
+.galigeo-text-container {
+    width: 60%;
 }
 
 .galigeo-text-title {
@@ -386,6 +464,26 @@
     font-size :  1.125rem !important;
     color : #909090 !important;
     margin-bottom: 1.5rem !important;
+}
+
+.galigeo-text-boutons a {
+    border-radius: 0.5rem;
+    color: #fff;
+    font-family: 'Montserrat';
+    font-size: 0.938rem;
+    padding: 0.75rem 1.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.galigeo-text-block .galigeo-text-boutons a:hover {
+    border-color: #2ecc71 !important;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.16) !important;
+}
+
+@media all and (max-width: 768px) {
+    .galigeo-text-container {
+        width: 90%;
+    }    
 }
 
 /* Block testimonials */
@@ -453,14 +551,11 @@
 .testimonial-name {
     font-weight: bold;
     font-family : 'Literata​';
-    font-size : 1.25rem​ !important;
-    margin-bottom : 5rem​;
-
 }
 
 .testimonial-position {
     color: #666;
-    font-family : 'Montserrat';
+    font-family : 'Montserrat​' !important;
     font-size : 1rem !important;
 
 }
@@ -468,16 +563,18 @@
 .testimonial-quote {
     font-style: italic;
     margin-top: 15px;
-    font-family : 'Montserrat​';
-    font-size : 1rem​ !important
+    font-family : 'Montserrat' !important;
+    font-size : 1.1rem;
 
 }
 
+/* Logos carousel */
 
 .galigeo-logo-carousel-wrapper {
     position: relative;
-    padding: 20px;
+    padding: 5rem 0;
     overflow: hidden;
+    box-shadow: 0px 16px 48px -20px rgba(0, 0, 0, 0.16);
 }
 
 .galigeo-logo-carousel {
@@ -500,12 +597,14 @@
 .galigeo-logo-carousel-image {
     max-width: 100%;
     max-height: 100px; /* Hauteur maximum des logos */
+    /*height: 2rem;*/
+    mix-blend-mode: luminosity;
     width: auto;
-    height: auto;
     object-fit: contain;
 }
 
 .galigeo-logo-carousel-nav {
+    display: none;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -550,6 +649,15 @@
 }
 
 /* Heros cas client */
+
+.hero-button {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-button:hover {
+    border-color: #2ecc71;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.16);
+}
 
 .hero-cas-client {
     padding: 5rem 0 7.5rem;
@@ -630,20 +738,112 @@
 
 /* CTA */
 
-.galigeo-cta .cta-btn > a:hover {
-    border : solid #2ecc71 1px;
-    box-shadow : 0 4px 4px rgba(0,0,0,0.16);
+
+.galigeo-cta-block .cta-buttons a {
+    border: solid transparent 1px; /* Bordure transparente par défaut */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0); /* Pas d'ombre par défaut */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Animation fluide */
 }
+
+.galigeo-cta-block .cta-buttons a:hover {
+    border-color: #2ecc71; /* Change uniquement la couleur de la bordure */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.16); /* Ajout de l'ombre */
+}
+
+.galigeo-cta-block {
+    border-radius: 2rem;
+    padding: 2.5rem;
+    max-width: 1800px;
+    margin: 30px auto;
+    width: 80%;    
+}
+
+.cta-title {
+    color: #03234D​ !important;
+    font-family: 'Montserrat';
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem !important;
+    line-height: 3.5rem;
+}
+
+.cta-text {
+    padding-right: 3.5rem;
+}
+
+.cta-container {
+    padding: 3.5rem;
+}
+
+.cta-description {
+    color : #fff​;
+    font-family : 'Montserrat​';
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.cta-buttons > a {
+    background : #03234D​;
+    font-family : 'Montserrat';
+    font-size : 0.938rem;
+    padding: 1.5rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+}
+
+.cta-image {
+    border-radius: 2rem;
+}
+
+@media (max-width: 768px) {
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .cta-image {
+        max-width: 370px;
+    }
+
+    .cta-container {
+        flex-direction: column-reverse;
+        padding: 0;
+    }
+    .cta-description {
+        margin-top: 15px;
+    }
+
+    .cta-title {
+        font-size: 1.5rem;
+    }
+
+    .cta-text {
+        padding-right: 0;
+        text-align: center;
+    }
+}
+
+/* Cas client */
 
 .galigeo-cas-client-block {
     padding-top: 2.5rem;
     background-color: #fff;
 }
 
-.galigeo-cas-client-title {
+.galigeo-cas-client-section-title {
     text-align: center;
     font-size: 1.75rem;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
+    color: #03234D;
+    font-family: 'Montserrat';
+}
+
+.galigeo-cas-client-title {
+    font-size: 1.75rem;
+    margin: 10px 0;
     color: #03234D;
     font-family: 'Montserrat';
 }
@@ -658,15 +858,15 @@
 .galigeo-cas-client-item {
     flex: 1 1 calc(33.333% - 20px); /* Maximum 3 items par rangée pour desktop */
     max-width: calc(33.333% - 20px);
-    text-align: center;
     margin-bottom: 20px;
 }
 
 .galigeo-cas-client-item img {
     max-width: 100%;
     border-radius: 8px;
-    height: 12rem;
-    margin: 0 auto 1rem;
+    /*height: 12rem;*/
+    margin: 0 0 1rem 0;
+    width: 100%;
 }
 
 .galigeo-cas-client-success-story {
@@ -674,7 +874,7 @@
     font-family: 'Literata​ Bold';
     font-weight: bold;
     color: #2ECC71;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 
 .galigeo-cas-client-title a {
@@ -707,16 +907,117 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .galigeo-cas-client-item {
         flex: 1 1 calc(50% - 20px); /* 2 items par rangée pour tablettes */
         max-width: calc(50% - 20px);
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .galigeo-cas-client-item {
         flex: 1 1 100%; /* Empilement pour mobile */
         max-width: 100%;
     }
+
+    .galigeo-cas-client-container {
+        margin: 10px 30px;
+    }
+}
+
+/* FAQ */
+
+.galigeo-faq-accordion {
+    border-radius: 8px;
+    /*overflow: hidden;*/
+    margin: 3rem auto;
+    padding-top: 1rem;
+    background-color: #fff;
+    width: 80%;
+}
+
+.galigeo-faq-question {
+    padding: 23px 30px;
+    background-color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Montserrat";
+    font-size: 1rem;
+    color: #60566E;
+    border-radius: 1rem;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;     
+    /*margin-bottom: 0.5rem;*/
+}
+
+.galigeo-faq-question:hover,
+.galigeo-faq-question[aria-expanded="true"] {
+    background-color: rgb(255, 66, 19);
+    color: #fff;
+}
+
+.galigeo-faq-question:hover .galigeo-faq-icon,
+.galigeo-faq-question[aria-expanded="true"] .galigeo-faq-icon {
+    color: #fff;
+}
+
+.galigeo-faq-icon-block {
+    margin-left: 10px;
+    background-color: rgba(248, 246, 252, 0.3);
+    border-radius: 2rem;
+    padding: 0.75rem 1.5rem;
+}
+
+.galigeo-faq-icon {
+    font-size: 0.938rem;
+    font-weight: bold;
+    color: #60566E;
+    font-family: 'Montserrat';    
+    user-select: none;
+}
+
+.galigeo-faq-title {
+    text-align: center;
+}
+
+.galigeo-faq-question_open {
+      
+}
+
+.galigeo-faq-question_open + .galigeo-faq-answer {
+    border-top: 1px solid #eee;
+}
+
+.galigeo-faq-answer {
+    height: 0; /* Par défaut, totalement replié */
+    overflow: hidden; /* Masquer tout contenu débordant */
+    transition: height 0.3s ease; /* Transition pour l'effet de déroulement */
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;    
+}
+
+.galigeo-faq-answer-content {
+    padding: 15px; /* Appliquer le padding interne ici */
+    background-color: #fff;
+    font-family: 'Montserrat';
+    font-size: 1rem;
+    color: #60566E;
+    height: 7.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: lighter;
+}
+
+.galigeo-faq-answer[style*="height: auto;"] {
+    height: auto; /* Laisser la réponse ouverte pour le premier élément */
+}
+
+.galigeo-faq-item {
+    margin: 25px auto;
+    box-shadow: 1px -1px 15px #F2F2F2;
+    border-radius: 1rem;
 }

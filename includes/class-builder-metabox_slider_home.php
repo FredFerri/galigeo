@@ -3,6 +3,14 @@ class Slider_Home_Block {
     public function render($data, $index) {
         ?>
         <div class="slider-home-block bg-white shadow-md rounded-lg p-6 mb-6">
+
+            <!-- ID du block -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][block_id]" value="<?php echo esc_attr($data['block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>
+
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4">Configuration du Home Slider</h3>
                 <div class="slider-home-slides">
@@ -78,11 +86,11 @@ class Slider_Home_Block {
             <!-- Image de background -->
             <div class="mb-4 bg-image-field <?php echo ($slide_data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
-                <button type="button" class="bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
-                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" value="<?php echo esc_url($slide_data['bg_image'] ?? ''); ?>" class="bg-image-url">
-                <div class="mt-4 bg-image-container <?php echo empty($slide_data['bg_image']) ? 'hidden' : ''; ?>">
-                    <img src="<?php echo esc_url($slide_data['bg_image']); ?>" alt="Background actuel" class="bg-image-preview max-w-xs">
-                    <button type="button" class="bg-red-500 text-white p-1 rounded-full remove-bg-image">&times;</button>
+                <button type="button" class="slide-home-bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][bg_image]" value="<?php echo esc_url($slide_data['bg_image'] ?? ''); ?>" class="slide-home-bg-image-url">
+                <div class="mt-4 slide-home-bg-image-container <?php echo empty($slide_data['bg_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo !empty($slide_data['bg_image']) ? esc_url($slide_data['bg_image']) : ''; ?>" alt="Background actuel" class="slide-home-bg-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full slide-home-remove-bg-image">&times;</button>
                 </div>
             </div>
 
@@ -113,11 +121,11 @@ class Slider_Home_Block {
             <!-- Image supplémentaire -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image supplémentaire :</label>
-                <button type="button" class="extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
-                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image]" value="<?php echo esc_url($slide_data['extra_image'] ?? ''); ?>" class="extra-image-url">
-                <div class="mt-4 extra-image-container <?php echo empty($slide_data['extra_image']) ? 'hidden' : ''; ?>">
-                    <img src="<?php echo esc_url($slide_data['extra_image']); ?>" alt="Image supplémentaire" class="extra-image-preview max-w-xs">
-                    <button type="button" class="bg-red-500 text-white p-1 rounded-full remove-extra-image">&times;</button>
+                <button type="button" class="slide-home-extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][slides][<?php echo esc_attr($slide_index); ?>][extra_image]" value="<?php echo esc_url($slide_data['extra_image'] ?? ''); ?>" class="slide-home-extra-image-url">
+                <div class="mt-4 slide-home-extra-image-container <?php echo empty($slide_data['extra_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo !empty($slide_data['extra_image']) ? esc_url($slide_data['extra_image']) : ''; ?>" alt="Image supplémentaire" class="slide-home-extra-image-preview max-w-xs">
+                    <button type="button" class="bg-red-500 text-white p-1 rounded-full slide-home-remove-extra-image">&times;</button>
                 </div>
             </div>
 
@@ -132,7 +140,7 @@ class Slider_Home_Block {
     public function sanitize($data, $post_id, $index) {
         $sanitized_data = array();
 
-        if (isset($data['slides']) && is_array($data['slides'])) {
+        if (isset($data['slides']) && is_array($data['slides'])) {            
             foreach ($data['slides'] as $slide_index => $slide_data) {
                 $sanitized_slide = array(
                     'title'       => isset($slide_data['title']) ? sanitize_text_field($slide_data['title']) : '',
@@ -158,6 +166,7 @@ class Slider_Home_Block {
 
                 $sanitized_data['slides'][$slide_index] = $sanitized_slide;
             }
+            $sanitized_data['block_id'] = isset($data['block_id']) ? sanitize_text_field($data['block_id']) : '';
         }
 
         return $sanitized_data;

@@ -185,6 +185,52 @@ jQuery(document).ready(function($) {
     });
 });
 
+// Code gérant le déplacement des blocks
+jQuery(document).ready(function ($) {
+    const blocksContainer = $("#builder-blocks");
+
+    // Déplacer un bloc vers le haut
+    $(document).on("click", ".move-block-up", function (e) {
+        e.preventDefault();
+        const block = $(this).closest(".builder-block");
+        const prevBlock = block.prev(".builder-block");
+        if (prevBlock.length > 0) {
+            block.insertBefore(prevBlock);
+            updateBlockIndexes();
+        }
+    });
+
+    // Déplacer un bloc vers le bas
+    $(document).on("click", ".move-block-down", function (e) {
+        e.preventDefault();
+        const block = $(this).closest(".builder-block");
+        const nextBlock = block.next(".builder-block");
+        if (nextBlock.length > 0) {
+            block.insertAfter(nextBlock);
+            updateBlockIndexes();
+        }
+    });
+
+    // Mettre à jour les index des blocs
+    function updateBlockIndexes() {
+        blocksContainer.children(".builder-block").each(function (index) {
+            $(this).attr("data-index", index);
+            $(this)
+                .find("input, textarea, select")
+                .each(function () {
+                    const name = $(this).attr("name");
+                    if (name) {
+                        $(this).attr(
+                            "name",
+                            name.replace(/\[\d+\]/, "[" + index + "]")
+                        );
+                    }
+                });
+        });
+    }
+});
+
+
 // Code qui gère l'affichage d'un message de confirmation lorsqu'on quitte la page alors que des changements 
 // non sauvegardés sont en cours
 (function ($) {

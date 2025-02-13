@@ -3,6 +3,14 @@ class Alternate_Visual_Block {
     public function render($data, $index) {
         ?>
         <div class="alternate-visual-block bg-white shadow-md rounded-lg p-6 mb-6 builder-block">
+
+            <!-- ID du block -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][av_block_id]" value="<?php echo esc_attr($data['av_block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>
+
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -52,7 +60,7 @@ class Alternate_Visual_Block {
                 <button type="button" class="av-inner-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
                 <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][av_inner_image]" value="<?php echo esc_url($data['av_inner_image'] ?? ''); ?>" class="av-inner-image-url">
                 <div class="mt-4 av-inner-image-container <?php echo empty($data['av_inner_image']) ? 'hidden' : ''; ?>">
-                    <img src="<?php echo esc_url($data['av_inner_image']); ?>" alt="Image intérieure" class="av-inner-image-preview">
+                    <img src="<?php echo !empty($data['av_inner_image']) ? esc_url($data['av_inner_image']) : ''; ?>" alt="Image intérieure" class="av-inner-image-preview">
                     <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-av-inner-image">&times;</button>
                 </div>
             </div>
@@ -87,7 +95,7 @@ class Alternate_Visual_Block {
                 <button type="button" class="av-bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
                 <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][av_background_value]" value="<?php echo esc_url($data['av_background_value'] ?? ''); ?>" class="av-bg-image-url">
                 <div class="mt-4 av-bg-image-container <?php echo empty($data['av_background_value']) ? 'hidden' : ''; ?>">
-                    <img src="<?php echo esc_url($data['av_background_value']); ?>" alt="Image de background" class="av-bg-image-preview max-w-xs">
+                    <img src="<?php echo !empty($data['av_background_value']) ? esc_url($data['av_background_value']) : ''; ?>" alt="Image de background" class="av-bg-image-preview max-w-xs">
                     <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-av-bg-image">&times;</button>
                 </div>
             </div>
@@ -144,6 +152,7 @@ class Alternate_Visual_Block {
         // var_dump($data);
         // die();
         $sanitized_data = array(
+            'av_block_id' => isset($data['av_block_id']) ? sanitize_title($data['av_block_id']) : '',            
             'av_title' => isset($data['av_title']) ? sanitize_text_field($data['av_title']) : '',
             'av_title_tag' => isset($data['av_title_tag']) ? sanitize_text_field($data['av_title_tag']) : 'h2',
             'av_subtitle' => isset($data['av_subtitle']) ? sanitize_text_field($data['av_subtitle']) : '',

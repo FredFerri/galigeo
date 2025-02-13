@@ -9,6 +9,10 @@
     display: none;
 }
 
+.block-controls {
+    align-items: center;
+}
+
 /* règles pour le reste des menus WP (en cas de conflit) */
 .wp-list-table {
     position: initial !important;
@@ -38,6 +42,10 @@
     margin-bottom: 10px;
     padding-bottom: 5px;
     border-bottom: 1px solid #e5e5e5;
+}
+
+.builder-block h3.galigeo {
+    color: #000;
 }
 
 .galigeo-admin-block {

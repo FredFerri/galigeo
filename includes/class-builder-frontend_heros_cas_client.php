@@ -1,6 +1,7 @@
 <?php
 class Heros_Cas_Client_Block_Frontend {
     public function render($data) {
+        $block_id = $data['block_id'] ?? '';
         $title = $data['title'] ?? '';
         $title_tag = $data['title_tag'] ?? 'h2';
         $description = $data['description'] ?? '';
@@ -8,6 +9,10 @@ class Heros_Cas_Client_Block_Frontend {
         $main_image = $data['main_image'] ?? '';
         $bg_type = $data['bg_type'] ?? 'color';
         $bg_value = $bg_type === 'color' ? ($data['bg_color'] ?? '#ffffff') : ($data['bg_image'] ?? '');
+        $show_button = $data['show_button'] ?? false;
+        $button_text = $data['button_text'] ?? '';
+        $button_url = $data['button_link'] ?? '#';
+        $button_color = $data['button_color'] ?? '#000000';
 
         // Style du background
         $bg_style = $bg_type === 'color' 
@@ -15,7 +20,7 @@ class Heros_Cas_Client_Block_Frontend {
             : "background-image: url('$bg_value'); background-size: cover; background-position: center;";
 
         // Début de la sortie HTML
-        $output = '<div class="hero-cas-client" style="' . $bg_style . '">';
+        $output = '<div  id="' . esc_attr($block_id) . '" class="hero-cas-client" style="' . $bg_style . '">';
         $output .= '<div class="hero-container">';
 
         // Block de gauche : Success Story, Titre, et Description
@@ -29,6 +34,10 @@ class Heros_Cas_Client_Block_Frontend {
         if ($description) {
             $output .= '<p class="hero-description">' . wp_kses_post($description) . '</p>';
         }
+        // Bouton
+        if ($show_button) {
+            $output .= '<a href="' . esc_url($button_url) . '" style="background-color: ' . esc_attr($button_color) . ';" class="hero-button px-6 py-3 rounded-lg text-white font-semibold">' . esc_html($button_text) . '</a>';
+        }        
         $output .= '</div>';
 
         // Block de droite : Image principale

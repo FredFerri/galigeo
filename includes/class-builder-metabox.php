@@ -72,7 +72,6 @@ class Builder_Metabox {
                 if (!empty($blocks)) {
                     foreach ($blocks as $index => $block) {
                         // var_dump($index);
-                        // var_dump($block);
                         $this->render_block($block, $index);
                     }
                 }
@@ -110,16 +109,25 @@ class Builder_Metabox {
         ?>
         <div class="builder-block" data-type="<?php echo esc_attr($type); ?>" data-index="<?php echo esc_attr($index); ?>">
             <input type="hidden" name="builder_blocks[<?php echo $index; ?>][type]" value="<?php echo esc_attr($type); ?>">
-            <h3 class="text-2xl antialiased font-bold md:text-3xl dark:text-gray-50 galigeo"><?php echo ucfirst($type); ?></h3>
+            <div class="block-header flex justify-between items-center">
+                <h3 class="text-2xl antialiased font-bold md:text-3xl dark:text-gray-50 galigeo">
+                    <?php echo ucfirst($type); ?>
+                </h3>
+                <div class="block-controls flex space-x-2">
+                    <button class="move-block-up button" title="Monter">&#8593;</button>
+                    <button class="move-block-down button" title="Descendre">&#8595;</button>
+                    <button class="remove-block button button-secondary">Supprimer</button>
+                </div>
+            </div>
             <?php
             if (isset($this->blocks[$type])) {
                 $this->blocks[$type]->render($data, $index);
             }
             ?>
-            <button class="remove-block button button-secondary">Supprimer</button>
         </div>
         <?php
     }
+
 
     public function save_metabox($post_id) {
         // Vérifications de sécurité
@@ -129,7 +137,7 @@ class Builder_Metabox {
 
         // Récupération des blocs soumis
         $blocks = isset($_POST['builder_blocks']) ? $_POST['builder_blocks'] : array();
-        // var_dump($blocks);
+
         $sanitized_blocks = array();
 
         // var_dump($blocks);

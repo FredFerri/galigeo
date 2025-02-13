@@ -2,6 +2,7 @@
 class Alternate_Visual_Block_Frontend {
     public function render($data) {
         // Récupération des données enregistrées dans le backend
+        $block_id = $data['av_block_id'] ?? '';
         $title = $data['av_title'] ?? '';
         $title_tag = $data['av_title_tag'] ?? 'h2';
         $subtitle = $data['av_subtitle'] ?? '';
@@ -27,7 +28,7 @@ class Alternate_Visual_Block_Frontend {
         $order_classes = $image_alignment === 'right' ? 'flex-row-reverse' : 'flex-row';
 
         // Container principal avec le background
-        $output = '<div class="av_alternate_visual_block py-16 my-12" style="' . esc_attr($background_style) . '">';
+        $output = '<div id="' . esc_attr($block_id) . '" class="av_alternate_visual_block py-16 my-12" style="' . esc_attr($background_style) . '">';
         $output .= '<div class="container mx-auto px-4 flex ' . esc_attr($order_classes) . ' items-center">';
 
         // Bloc d'image à l'intérieur (nouvelle image ajoutée)
@@ -50,14 +51,14 @@ class Alternate_Visual_Block_Frontend {
             $output .= '<h3 class="av_subtitle galigeo-subtitle text-2xl font-semibold">' . esc_html($subtitle) . '</h3>';
         }
 
-        // Paragraphe
+        // Paragraphe avec la couleur dynamique
         if ($paragraph) {
-            $output .= '<p class="av_paragraph" style="font-size: ' . esc_attr($font_size) . '; color: ' . esc_attr($paragraph_color) . ';">' . wp_kses_post($paragraph) . '</p>';
+            $output .= '<p class="av_paragraph" style="color: ' . esc_attr($paragraph_color) . ';">' . wp_kses_post($paragraph) . '</p>';
         }
 
-        // Bouton
+        // Bouton avec couleur de fond dynamique
         if ($show_button) {
-            $output .= '<a href="' . esc_url($button_url) . '" class="av_button px-6 py-3 rounded-lg text-white font-semibold" style="background-color: ' . esc_attr($button_color) . '; padding: 12px; border-radius: 10px;">' . esc_html($button_text) . '</a>';
+            $output .= '<a href="' . esc_url($button_url) . '" class="av_button px-6 py-3 rounded-lg text-white font-semibold" style="background-color: ' . esc_attr($button_color) . ';">' . esc_html($button_text) . '</a>';
         }
 
         $output .= '</div>'; // Fermeture du bloc de texte

@@ -3,6 +3,7 @@ class Import_HTML_Block {
     public function render($data, $index) {
         ?>
         <div class="import-html-block bg-white shadow-md rounded-lg p-6 mb-6">
+
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>

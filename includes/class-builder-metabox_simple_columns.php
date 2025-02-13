@@ -4,6 +4,7 @@ class Simple_Columns_Block {
         for ($col = 0; $col < 3; $col++) {
             ?>
             <div class="simple-columns-field simple-columns-block bg-white shadow-md rounded-lg p-6 mb-6">
+
                 <!-- Titre -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Titre (Colonne <?php echo $col + 1; ?>) :</label>
@@ -32,11 +33,11 @@ class Simple_Columns_Block {
                 <!-- Image -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Image (Colonne <?php echo $col + 1; ?>) :</label>
-                    <button type="button" class="extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
-                    <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][columns][<?php echo $col; ?>][image]" value="<?php echo esc_url($data['columns'][$col]['image'] ?? ''); ?>" class="extra-image-url">
-                    <div class="extra-image-container <?php echo empty($data['columns'][$col]['image']) ? 'hidden' : ''; ?>">
-                        <img src="<?php echo esc_url($data['columns'][$col]['image']); ?>" alt="Image colonne <?php echo $col + 1; ?>" class="extra-image-preview max-w-xs">
-                        <button type="button" class="remove-extra-image bg-red-500 text-white p-1 rounded-full">&times;</button>
+                    <button type="button" class="simple-columns-extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                    <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][columns][<?php echo $col; ?>][image]" value="<?php echo esc_url($data['columns'][$col]['image'] ?? ''); ?>" class="simple-columns-extra-image-url">
+                    <div class="simple-columns-extra-image-container <?php echo empty($data['columns'][$col]['image']) ? 'hidden' : ''; ?>">
+                        <img src="<?php echo !empty($data['columns'][$col]['image']) ? esc_url($data['columns'][$col]['image']) : ''; ?>" alt="Image colonne <?php echo $col + 1; ?>" class="simple-columns-extra-image-preview max-w-xs">
+                        <button type="button" class="simple-columns-remove-extra-image bg-red-500 text-white p-1 rounded-full">&times;</button>
                     </div>
                 </div>
 
@@ -58,11 +59,11 @@ class Simple_Columns_Block {
                 <!-- Image de background -->
                 <div class="mb-4 bg-image-field <?php echo ($data['columns'][$col]['background_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
-                    <button type="button" class="bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
-                    <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][columns][<?php echo $col; ?>][background_image]" value="<?php echo esc_url($data['columns'][$col]['background_image'] ?? ''); ?>" class="bg-image-url">
-                    <div class="bg-image-container <?php echo empty($data['columns'][$col]['background_image']) ? 'hidden' : ''; ?>">
-                        <img src="<?php echo esc_url($data['columns'][$col]['background_image']); ?>" alt="Background colonne <?php echo $col + 1; ?>" class="bg-image-preview max-w-xs">
-                        <button type="button" class="remove-bg-image bg-red-500 text-white p-1 rounded-full">&times;</button>
+                    <button type="button" class="simple-columns-bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                    <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][columns][<?php echo $col; ?>][background_image]" value="<?php echo esc_url($data['columns'][$col]['background_image'] ?? ''); ?>" class="simple-columns-bg-image-url">
+                    <div class="simple-columns-bg-image-container <?php echo empty($data['columns'][$col]['background_image']) ? 'hidden' : ''; ?>">
+                        <img src="<?php echo !empty($data['columns'][$col]['background_image']) ? esc_url($data['columns'][$col]['background_image']) : ''; ?>" alt="Background colonne <?php echo $col + 1; ?>" class="simple-columns-bg-image-preview max-w-xs">
+                        <button type="button" class="simple-columns-remove-bg-image bg-red-500 text-white p-1 rounded-full">&times;</button>
                     </div>
                 </div>
             </div>
@@ -80,6 +81,7 @@ class Simple_Columns_Block {
                 'description' => isset($data['columns'][$col]['description']) ? wp_kses_post($data['columns'][$col]['description']) : '',
                 'background_type' => isset($data['columns'][$col]['background_type']) ? sanitize_text_field($data['columns'][$col]['background_type']) : 'color',
             );
+
 
             if (!empty($data['columns'][$col]['image'])) {
                 $sanitized_column['image'] = esc_url_raw($data['columns'][$col]['image']);

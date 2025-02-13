@@ -1,6 +1,8 @@
 <?php
 class Logos_Carousel_Block_Frontend {
     public function render($data) {
+        // var_dump($data);
+        $block_id = $data['lc_block_id'] ?? '';
         $logos = $data['lc_logos'] ?? [];
         $title = $data['lc_title'] ?? '';
         $title_tag = $data['lc_title_tag'] ?? 'h2';
@@ -11,7 +13,7 @@ class Logos_Carousel_Block_Frontend {
         
         if (empty($logos)) return '';
         
-        $output = '<div class="galigeo-logo-carousel-wrapper" style="';
+        $output = '<div id="' . esc_attr($block_id) . '" class="galigeo-logo-carousel-wrapper" style="';
         if ($background_type === 'color') {
             $output .= "background-color: $background_color;";
         } elseif ($background_type === 'image') {

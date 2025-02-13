@@ -53,19 +53,19 @@
         });
 
         handleMediaFrame(
-            '.extra-image-selector',
-            '.extra-image-url',
-            '.extra-image-preview',
-            '.extra-image-container',
-            '.remove-extra-image'
+            '.simple-columns-extra-image-selector',
+            '.simple-columns-extra-image-url',
+            '.simple-columns-extra-image-preview',
+            '.simple-columns-extra-image-container',
+            '.simple-columns-remove-extra-image'
         );
 
         handleMediaFrame(
-            '.bg-image-selector',
-            '.bg-image-url',
-            '.bg-image-preview',
-            '.bg-image-container',
-            '.remove-bg-image'
+            '.simple-columns-bg-image-selector',
+            '.simple-columns-bg-image-url',
+            '.simple-columns-bg-image-preview',
+            '.simple-columns-bg-image-container',
+            '.simple-columns-remove-bg-image'
         );
     });
 })(jQuery);

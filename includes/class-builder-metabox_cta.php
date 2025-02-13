@@ -3,6 +3,14 @@ class Call_To_Action_Block {
     public function render($data, $index) {
         ?>
         <div class="cta-block bg-white shadow-md rounded-lg p-6 mb-6 builder-block">
+
+            <!-- ID du block -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][block_id]" value="<?php echo esc_attr($data['block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>
+
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -38,47 +46,58 @@ class Call_To_Action_Block {
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Couleur du texte de description :</label>
                 <input type="color" name="builder_blocks[<?php echo $index; ?>][data][description_color]" value="<?php echo esc_attr($data['description_color'] ?? '#000000'); ?>" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-10 w-20">
-            </div>            
+            </div>       
+
+            <!-- Image à l'intérieur du block -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Image à l'intérieur du block :</label>
+                <button type="button" class="cta-inner-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][cta_inner_image]" value="<?php echo esc_url($data['cta_inner_image'] ?? ''); ?>" class="cta-inner-image-url">
+                <div class="relative mt-4 cta-inner-image-container <?php echo empty($data['cta_inner_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo !empty($data['cta_inner_image']) ? esc_url($data['cta_inner_image']) : ''; ?>" alt="Image intérieure" class="cta-inner-image-preview">
+                    <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-cta-inner-image">&times;</button>
+                </div>
+            </div>                 
 
             <!-- Type de background -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Type de background :</label>
-                <select name="builder_blocks[<?php echo $index; ?>][data][bg_type]" class="bg-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <select name="builder_blocks[<?php echo $index; ?>][data][bg_type]" class="cta-bg-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="color" <?php selected($data['bg_type'] ?? 'color', 'color'); ?>>Couleur</option>
                     <option value="image" <?php selected($data['bg_type'] ?? 'color', 'image'); ?>>Image</option>
                 </select>
             </div>
 
             <!-- Couleur de background -->
-            <div class="mb-4 bg-color-field <?php echo ($data['bg_type'] ?? 'color') === 'image' ? 'hidden' : ''; ?>">
+            <div class="mb-4 cta-bg-color-field <?php echo ($data['bg_type'] ?? 'color') === 'image' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Couleur de background :</label>
-                <input type="color" name="builder_blocks[<?php echo $index; ?>][data][bg_color]" value="<?php echo esc_attr($data['bg_color'] ?? '#ffffff'); ?>" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-10 w-20">
+                <input type="color" name="builder_blocks[<?php echo $index; ?>][data][cta_bg_value]" value="<?php echo esc_attr($data['bg_color'] ?? '#ffffff'); ?>" class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200  focus:ring-opacity-50 h-10 w-20">
             </div>
 
             <!-- Image de background -->
-            <div class="mb-4 bg-image-field <?php echo ($data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
+            <div class="mb-4 cta-bg-image-field <?php echo ($data['bg_type'] ?? 'color') === 'color' ? 'hidden' : ''; ?>">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
                 <!-- Bouton pour choisir ou uploader une image -->
-                <button type="button" class="image-selector-button bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <button type="button" class="cta-bg-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
 
                 <!-- Champ caché pour stocker l'URL de l'image -->
-                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][bg_image]" value="<?php echo esc_url($data['bg_image'] ?? ''); ?>" class="bg-image-url">
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($index); ?>][data][cta_bg_image]" value="<?php echo esc_url($data['cta_bg_image'] ?? ''); ?>" class="cta-bg-image-url">
 
                 <!-- Affichage de l'image sélectionnée -->
                 <div class="mt-4">
-                    <?php if (!empty($data['bg_image'])) : ?>
-                        <div class="relative bg-image-container">
-                            <img src="<?php echo esc_url($data['bg_image']); ?>" alt="Background actuel" class="bg-image-preview max-w-xs">
+                    <?php if (!empty($data['cta_bg_image'])) : ?>
+                        <div class="relative cta-bg-image-container">
+                            <img src="<?php echo esc_url($data['cta_bg_image']); ?>" alt="Background actuel" class="cta-bg-image-preview max-w-xs">
                             <!-- Bouton de suppression -->
-                            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-bg-image">
+                            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-cta-bg-image">
                                 &times;
                             </button>
                         </div>
                     <?php else : ?>
-                        <div class="relative bg-image-container hidden">
-                            <img src="" alt="Background actuel" class="bg-image-preview max-w-xs">
+                        <div class="relative cta-bg-image-container hidden">
+                            <img src="" alt="Background actuel" class="cta-bg-image-preview max-w-xs">
                             <!-- Bouton de suppression -->
-                            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-bg-image">
+                            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full remove-cta-bg-image">
                                 &times;
                             </button>
                         </div>
@@ -141,18 +160,30 @@ class Call_To_Action_Block {
     }
 
     public function sanitize($data, $post_id, $index) {
+        // var_dump($data);
+        // die();
         $sanitized_data = array(
+            'block_id' => isset($data['block_id']) ? sanitize_text_field($data['block_id']) : '',
             'title' => isset($data['title']) ? sanitize_text_field($data['title']) : '',
             'title_tag' => isset($data['title_tag']) ? sanitize_text_field($data['title_tag']) : 'h2',
             'description' => isset($data['description']) ? wp_kses_post($data['description']) : '',
             'description_font_size' => isset($data['description_font_size']) ? intval($data['description_font_size']) : 16,
             'description_color' => isset($data['description_color']) ? sanitize_hex_color($data['description_color']) : '#000000',
             'bg_type' => isset($data['bg_type']) ? sanitize_text_field($data['bg_type']) : 'color',
-            'bg_color' => isset($data['bg_color']) ? sanitize_hex_color($data['bg_color']) : '#ffffff',
+            'bg_color' => isset($data['cta_bg_value']) ? sanitize_hex_color($data['cta_bg_value']) : '#ffffff',
         );
 
         // Gestion de l'image de background
-        $sanitized_data['bg_image'] = esc_url_raw($data['bg_image'] ?? '');
+        if ($data['bg_type'] === 'image') {
+            if (!empty($data['cta_bg_image'])) {
+                $sanitized_data['cta_bg_image'] = esc_url_raw($data['cta_bg_image']);
+            }
+        }
+
+        // Gestion de l'image intérieure du block
+        if (!empty($data['cta_inner_image'])) {
+            $sanitized_data['cta_inner_image'] = esc_url_raw($data['cta_inner_image']);
+        }   
 
         // Gestion des boutons
         $sanitized_data['buttons'] = array();

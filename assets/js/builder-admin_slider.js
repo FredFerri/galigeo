@@ -85,61 +85,76 @@ function admin_slider_scripts($, builderContainer) {
         const slideField = $(this).closest('.slide-fields');
         slideField.find('.bg-color-field').toggle(bgType === 'color');
         slideField.find('.bg-image-field').toggle(bgType === 'image');
+        slideField.find('.bg-color-field').toggleClass('hidden', bgType !== 'color');
+        slideField.find('.bg-image-field').toggleClass('hidden', bgType !== 'image');        
     });
 
 
-    /* Gestion de la suppression dynamique des images */
-    const removeImgButtons = document.querySelectorAll('.slider-remove-img');
+// Gestion des modals pour les champs d'image
+        function handleMediaFrame(buttonClass, inputClass, previewClass, containerClass, removeClass) {
+            $(document).on('click', buttonClass, function (event) {
+                event.preventDefault();
 
-    removeImgButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const ImgContainer = this.closest('.relative');
-            const ImgIndex = this.getAttribute('data-img-index');
+                const button = $(this);
+                const slide = button.closest('.slide-fields');
+                const input = slide.find(inputClass);
+                const preview = slide.find(previewClass);
+                const container = slide.find(containerClass);
+                const removeButton = slide.find(removeClass);
 
-            // Masquer l'image et le bouton
-            ImgContainer.style.display = 'none';
+                const mediaFrame = wp.media({
+                    title: 'Choisir une image',
+                    button: { text: 'Utiliser cette image' },
+                    multiple: false,
+                });
 
-            // Désactiver l'input correspondant pour qu'il ne soit pas envoyé dans le formulaire
-            const hiddenInput = ImgContainer.querySelector('input[type="hidden"]');
-            if (hiddenInput) {
-                hiddenInput.disabled = true;
-            }
-        });
-    });   
+                mediaFrame.on('select', function () {
+                    const attachment = mediaFrame.state().get('selection').first().toJSON();
+                    input.val(attachment.url);
+                    preview.attr('src', attachment.url).removeClass('hidden');
+                    container.removeClass('hidden');
+                    removeButton.removeClass('hidden');
+                });
 
-    // Gérer le changement du type de média
-    $(document).on('change', '.slider-block  .media-type-select', function() {
-        const mediaType = $(this).val(); // Récupère le type de média sélectionné
-        const mediaField = $(this).closest('.slide-fields').find('.media-field');
+                mediaFrame.open();
+            });
 
-        if (mediaType === 'video') {
-            // Si la vidéo est sélectionnée, changer le texte du label et accepter les fichiers vidéo
-            mediaField.find('label').text('Vidéo :');
-            mediaField.find('input[type="file"]').attr('accept', 'video/*');
-        } else {
-            // Si l'image est sélectionnée, changer le texte du label et accepter les fichiers image
-            mediaField.find('label').text('Image :');
-            mediaField.find('input[type="file"]').attr('accept', 'image/*');
+            $(document).on('click', removeClass, function (event) {
+                event.preventDefault();
+
+                const slide = $(this).closest('.slide-fields');
+                slide.find(inputClass).val('');
+                slide.find(previewClass).attr('src', '').addClass('hidden');
+                slide.find(containerClass).addClass('hidden');
+            });
         }
-    });
 
-    // Suppression de l'image ou du fichier média dans le slide
-    $(document).on('click', '.slider-remove-media', function() {
-        const slideIndex = $(this).data('slide-index');
-        const $mediaContainer = $(this).closest('.media-file-field');
+        // Initialisation de l'upload d'image de background
+        handleMediaFrame(
+            '.slide-bg-image-selector',
+            '.slide-bg-image-url',
+            '.slide-bg-image-preview',
+            '.slide-bg-image-container',
+            '.slide-remove-bg-image'
+        ); 
 
-        // Cache le bouton de suppression et l'élément média
-        $mediaContainer.find('input[type="hidden"]').remove();
-        $mediaContainer.find('img, video').remove();
-        $(this).remove();
+        // Initialisation de l'upload de l'image supplémentaire
+        handleMediaFrame(
+            '.slide-image-selector',
+            '.slide-image-url',
+            '.slide-image-preview',
+            '.slide-image-container',
+            '.slide-remove-image'
+        );         
 
-        // Ajouter un champ caché pour indiquer que le média doit être supprimé
-        $mediaContainer.append(`<input type="hidden" name="builder_blocks[${slideIndex}][data][slides][${slideIndex}][media_file]" value="">`);
-    });
-
-
-    // Initialiser l'affichage des champs de média en fonction de la sélection actuelle
-    $('.slider-block .media-type-select').each(function() {
-        $(this).trigger('change');
-    });   
+    // Gérer l'affichage/masquage des options du bouton
+    jQuery(document).on('change', '.slider-block .show_button_checkbox', function() {
+        var index = jQuery(this).data('index');
+        var buttonOptions = jQuery('.builder-block[data-type="slider"] .button-options[data-index="' + index + '"]');
+        if (this.checked) {
+            buttonOptions.removeClass('hidden').addClass('block');
+        } else {
+            buttonOptions.removeClass('block').addClass('hidden');
+        }
+    });    
 }

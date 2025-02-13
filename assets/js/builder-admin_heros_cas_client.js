@@ -8,6 +8,17 @@
             block.find('.bg-image-field').toggleClass('hidden', bgType !== 'image');
         });
 
+        // Gestion de l'affichage des options du bouton
+        $(document).on('change', '.hero-button-toggle', function () {
+            const block = $(this).closest('.heros-cas-client-block');
+            const buttonOptions = block.find('.hero-button-options');
+            if ($(this).is(':checked')) {
+                buttonOptions.removeClass('hidden').addClass('block');
+            } else {
+                buttonOptions.addClass('hidden').removeClass('block');
+            }
+        });        
+
         // Gestion des images via WP Media
         function handleMediaFrame(buttonClass, inputClass, previewClass, containerClass, removeClass) {
             $(document).on('click', buttonClass, function (event) {
@@ -47,19 +58,19 @@
 
         // Initialisation des images
         handleMediaFrame(
-            '.main-image-selector',
-            '.main-image-url',
-            '.main-image-preview',
-            '.main-image-container',
-            '.remove-main-image'
+            '.hcc-main-image-selector',
+            '.hcc-main-image-url',
+            '.hcc-main-image-preview',
+            '.hcc-main-image-container',
+            '.hcc-remove-main-image'
         );
 
         handleMediaFrame(
-            '.bg-image-selector',
-            '.bg-image-url',
-            '.bg-image-preview',
-            '.bg-image-container',
-            '.remove-bg-image'
+            '.hcc-bg-image-selector',
+            '.hcc-bg-image-url',
+            '.hcc-bg-image-preview',
+            '.hcc-bg-image-container',
+            '.hcc-remove-bg-image'
         );
     });
 })(jQuery);

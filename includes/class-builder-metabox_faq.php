@@ -3,6 +3,20 @@ class Faq_Block {
     public function render($data, $index) {
         ?>
         <div class="faq-block bg-white shadow-md rounded-lg p-6 mb-6">
+
+            <!-- ID du block -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][faq_block_id]" value="<?php echo esc_attr($data['faq_block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>   
+
+            <!-- Titre de la section -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Titre de la section :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][faq_section_title]" value="<?php echo esc_attr($data['faq_section_title'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4">Configuration des questions</h3>
                 <div class="faq-items">
@@ -51,7 +65,10 @@ class Faq_Block {
     }
 
     public function sanitize($data, $post_id, $index) {
-        $sanitized_data = [];
+        $sanitized_data = [
+            'faq_section_title' => sanitize_text_field($data['faq_section_title'] ?? ''),
+            'faq_block_id' => sanitize_text_field($data['faq_block_id'] ?? ''),
+        ];
 
         if (isset($data['faqs']) && is_array($data['faqs'])) {
             foreach ($data['faqs'] as $faq_index => $faq_data) {

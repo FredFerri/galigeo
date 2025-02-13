@@ -2,6 +2,7 @@
 class Text_Block_Frontend {
     public function render($data) {
         $title = $data['title'] ?? '';
+        $block_id = $data['block_id'] ?? '';
         $title_tag = $data['title_tag'] ?? 'h2';
         $subtitle = $data['subtitle'] ?? '';
         $subtitle_tag = $data['subtitle_tag'] ?? 'h3';
@@ -11,7 +12,7 @@ class Text_Block_Frontend {
         $bg_color = $data['bg_color'] ?? '#ffffff';
         $buttons = $data['buttons'] ?? [];
 
-        $output = '<div class="galigeo-text-block py-16" style="background-color: ' . esc_attr($bg_color) . ';">';
+        $output = '<div id="' . esc_attr($block_id) . '" class="galigeo-text-block py-16" style="background-color: ' . esc_attr($bg_color) . ';">';
         $output .= '<div class="galigeo-text-container mx-auto px-4">';
 
         // Titre

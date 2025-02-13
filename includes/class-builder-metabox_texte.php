@@ -3,6 +3,14 @@ class Text_Block {
     public function render($data, $index) {
         ?>
         <div class="text-block bg-white shadow-md rounded-lg p-6 mb-6">
+
+            <!-- ID du block -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][block_id]" value="<?php echo esc_attr($data['block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>
+
             <!-- Titre -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre :</label>
@@ -92,7 +100,7 @@ class Text_Block {
 
     private function render_button_fields($block_index, $button_index, $button_data) {
         ?>
-        <div class="button-fields bg-gray-100 p-4 rounded-md mb-4">
+        <div class="text-button-fields bg-gray-100 p-4 rounded-md mb-4">
             <h4 class="font-semibold mb-2">Bouton <span class="button-number"><?php echo esc_html($button_index + 1); ?></span></h4>
 
             <!-- Texte du bouton -->
@@ -114,7 +122,7 @@ class Text_Block {
             </div>
 
             <!-- Bouton de suppression -->
-            <button type="button" class="remove-button mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+            <button type="button" class="text-remove-button mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                 Supprimer ce bouton
             </button>
         </div>
@@ -126,6 +134,7 @@ class Text_Block {
     public function sanitize($data, $post_id, $index) {
         // var_dump($data);
         $sanitized_data = array(
+            'block_id' => isset($data['block_id']) ? sanitize_title($data['block_id']) : '', 
             'title' => isset($data['title']) ? sanitize_text_field($data['title']) : '',
             'title_tag' => isset($data['title_tag']) ? sanitize_text_field($data['title_tag']) : 'h2',
             'subtitle' => isset($data['subtitle']) ? sanitize_text_field($data['subtitle']) : '',

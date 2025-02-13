@@ -2,13 +2,15 @@
 class Slider_Home_Block_Frontend {
     public function render($data) {
         $slides = $data['slides'] ?? [];
+        $block_id = $data['block_id'] ?? '';
         if (count($slides) === 0) return '';
 
-        $output = '<div class="galigeo-slider-home-wrapper">';
+        $output = '<div id="' . esc_attr($block_id) . '" class="galigeo-slider-home-wrapper">';
         $output .= '<div class="galigeo-slider-home">';
         $output .= '<div class="galigeo-slider-home-container">';
 
         foreach ($slides as $index => $slide) {
+            $block_id = $slide['block_id'] ?? '';
             $bg_type = $slide['bg_type'] ?? 'color';
             $bg_value = $bg_type === 'color' ? ($slide['bg_color'] ?? '#ffffff') : ($slide['bg_image'] ?? '');
             $title = $slide['title'] ?? '';
@@ -19,7 +21,7 @@ class Slider_Home_Block_Frontend {
             $button_color = $slide['button_color'] ?? '#03234D'; // Couleur par défaut modifiée
             $image = $slide['extra_image'] ?? ''; // Ajout de l'image
 
-            $output .= '<div class="galigeo-slide-home" data-index="' . $index . '" style="' . ($bg_type === 'color' ? "background-color: $bg_value;" : "background-image: url('$bg_value');") . '">';
+            $output .= '<div id="' . esc_attr($block_id) . '" class="galigeo-slide-home" data-index="' . $index . '" style="' . ($bg_type === 'color' ? "background-color: $bg_value;" : "background-image: url('$bg_value');") . '">';
             $output .= '<div class="galigeo-slide-home-content">';
 
             // Titre
@@ -51,6 +53,10 @@ class Slider_Home_Block_Frontend {
         if (count($slides) > 1) {
             $output .= '<button class="galigeo-slider-home-nav galigeo-slider-home-prev">&lt;</button>';
             $output .= '<button class="galigeo-slider-home-nav galigeo-slider-home-next">&gt;</button>';
+        }
+        else {
+            $output .= '<button class="hidden galigeo-slider-home-nav galigeo-slider-home-prev">&lt;</button>';
+            $output .= '<button class="hidden galigeo-slider-home-nav galigeo-slider-home-next">&gt;</button>';            
         }
 
         $output .= '</div></div>'; // .galigeo-slider-wrapper

@@ -36,7 +36,7 @@
         function handleMediaFrame(buttonClass, inputClass, previewClass, containerClass, removeClass) {
             $(document).on('click', buttonClass, function (event) {
                 event.preventDefault();
-
+                console.dir(buttonClass);
                 const button = $(this);
                 const slide = button.closest('.slide-home-fields');
                 const input = slide.find(inputClass);
@@ -91,10 +91,10 @@
                     }
                 });
 
-                newSlide.find('.bg-image-preview').attr('src', '').addClass('hidden');
-                newSlide.find('.bg-image-container').addClass('hidden');
-                newSlide.find('.extra-image-preview').attr('src', '').addClass('hidden');
-                newSlide.find('.extra-image-container').addClass('hidden');
+                newSlide.find('.slide-home-bg-image-preview').attr('src', '').addClass('hidden');
+                newSlide.find('.slide-home-bg-image-container').addClass('hidden');
+                newSlide.find('.slide-home-extra-image-preview').attr('src', '').addClass('hidden');
+                newSlide.find('.slide-home-extra-image-container').addClass('hidden');
 
                 sliderContainer.append(newSlide);
 
@@ -111,8 +111,8 @@
         function initializeImageFields(slide) {
             slide.find('.bg-image-url').each(function () {
                 const input = $(this);
-                const preview = slide.find('.bg-image-preview');
-                const container = slide.find('.bg-image-container');
+                const preview = slide.find('.slide-home-bg-image-preview');
+                const container = slide.find('.slide-home-bg-image-container');
 
                 if (input.val()) {
                     preview.attr('src', input.val()).removeClass('hidden');
@@ -123,7 +123,7 @@
             slide.find('.extra-image-url').each(function () {
                 const input = $(this);
                 const preview = slide.find('.extra-image-preview');
-                const container = slide.find('.extra-image-container');
+                const container = slide.find('.slide-home-extra-image-container');
 
                 if (input.val()) {
                     preview.attr('src', input.val()).removeClass('hidden');
@@ -145,7 +145,7 @@
         });
 
         // Gestion des événements
-        $(document).on('change', '.bg-type-select', function () {
+        $(document).on('change', '.slide-home-fields .bg-type-select', function () {
             const slide = $(this).closest('.slide-home-fields');
             console.dir(slide);
             toggleBackgroundFields(slide);
@@ -158,19 +158,19 @@
 
         // Gestion des modals pour chaque type d'image
         handleMediaFrame(
-            '.bg-image-selector',
-            '.bg-image-url',
-            '.bg-image-preview',
-            '.bg-image-container',
-            '.remove-bg-image'
+            '.slide-home-bg-image-selector',
+            '.slide-home-bg-image-url',
+            '.slide-home-bg-image-preview',
+            '.slide-home-bg-image-container',
+            '.slide-home-remove-bg-image'
         );
 
         handleMediaFrame(
-            '.extra-image-selector',
-            '.extra-image-url',
-            '.extra-image-preview',
-            '.extra-image-container',
-            '.remove-extra-image'
+            '.slide-home-extra-image-selector',
+            '.slide-home-extra-image-url',
+            '.slide-home-extra-image-preview',
+            '.slide-home-extra-image-container',
+            '.slide-home-remove-extra-image'
         );
 
         // Initialisation lors du chargement de la page

@@ -1,5 +1,5 @@
 function admin_testimonials_scripts($, builderContainer) {
-    // Fonction pour ajouter un témoignage
+    // Ajouter un témoignage
     builderContainer.on('click', '.add-testimonial', function (e) {
         e.preventDefault();
 
@@ -30,7 +30,7 @@ function admin_testimonials_scripts($, builderContainer) {
         }
     });
 
-    // Fonction pour supprimer un témoignage
+    // Supprimer un témoignage
     builderContainer.on('click', '.remove-testimonial', function (e) {
         e.preventDefault();
 
@@ -60,25 +60,16 @@ function admin_testimonials_scripts($, builderContainer) {
         });
     }
 
-    // Gestion du type de background (image/couleur)
-    builderContainer.on('change', '.testimonials-block .bg-type-select', function () {
-        const bgType = $(this).val();
-
-        const testimonialField = $(this).closest('.testimonial-fields');
-        testimonialField.find('.bg-color-field').toggle(bgType === 'color');
-        testimonialField.find('.bg-image-field').toggle(bgType === 'image');
-    });
-
     // Gestion de l'upload et de la suppression des images via WP Media
     function handleMediaFrame(buttonClass, inputClass, previewClass, containerClass, removeClass) {
         builderContainer.on('click', buttonClass, function (event) {
             event.preventDefault();
 
             const button = $(this);
-            const testimonial = button.closest('.testimonial-fields');
-            const input = testimonial.find(inputClass);
-            const preview = testimonial.find(previewClass);
-            const container = testimonial.find(containerClass);
+            const container = button.closest('.testimonial-fields');
+            const input = container.find(inputClass);
+            const preview = container.find(previewClass);
+            const previewContainer = container.find(containerClass);
 
             const mediaFrame = wp.media({
                 title: 'Choisir une image',
@@ -90,7 +81,7 @@ function admin_testimonials_scripts($, builderContainer) {
                 const attachment = mediaFrame.state().get('selection').first().toJSON();
                 input.val(attachment.url);
                 preview.attr('src', attachment.url);
-                container.removeClass('hidden');
+                previewContainer.removeClass('hidden');
             });
 
             mediaFrame.open();
@@ -99,19 +90,65 @@ function admin_testimonials_scripts($, builderContainer) {
         builderContainer.on('click', removeClass, function (event) {
             event.preventDefault();
 
-            const testimonial = $(this).closest('.testimonial-fields');
-            testimonial.find(inputClass).val('');
-            testimonial.find(previewClass).attr('src', '');
-            testimonial.find(containerClass).addClass('hidden');
+            const container = $(this).closest('.testimonial-fields');
+            container.find(inputClass).val('');
+            container.find(previewClass).attr('src', '');
+            container.find(containerClass).addClass('hidden');
         });
     }
 
-    // Initialisation de l'upload des images
+    // Gestion de l'upload et de la suppression des images via WP Media
+    function handleBackgroundMediaFrame(buttonClass, inputClass, previewClass, containerClass, removeClass) {
+        builderContainer.on('click', buttonClass, function (event) {
+            event.preventDefault();
+
+            const button = $(this);
+            const container = button.closest('.testimonials-top');
+            const input = container.find(inputClass);
+            const preview = container.find(previewClass);
+            const previewContainer = container.find(containerClass);
+
+            const mediaFrame = wp.media({
+                title: 'Choisir une image',
+                button: { text: 'Utiliser cette image' },
+                multiple: false,
+            });
+
+            mediaFrame.on('select', function () {
+                const attachment = mediaFrame.state().get('selection').first().toJSON();
+                input.val(attachment.url);
+                preview.attr('src', attachment.url);
+                previewContainer.removeClass('hidden');
+            });
+
+            mediaFrame.open();
+        });
+
+        builderContainer.on('click', removeClass, function (event) {
+            event.preventDefault();
+
+            const container = $(this).closest('.testimonials-top');
+            container.find(inputClass).val('');
+            container.find(previewClass).attr('src', '');
+            container.find(containerClass).addClass('hidden');
+        });
+    }    
+
+    // Initialisation de l'upload des images des témoignages
     handleMediaFrame(
-        '.extra-image-selector', // Bouton pour ouvrir WP Media
-        '.extra-image-url', // Input caché pour l'URL
-        '.extra-image-preview', // Aperçu de l'image
-        '.extra-image-container', // Container de l'aperçu
-        '.remove-extra-image' // Bouton pour supprimer l'image
+        '.testimonial-extra-image-selector', // Bouton pour ouvrir WP Media
+        '.testimonial-extra-image-url', // Input caché pour l'URL
+        '.testimonial-extra-image-preview', // Aperçu de l'image
+        '.testimonial-extra-image-container', // Container de l'aperçu
+        '.testimonial-remove-extra-image' // Bouton pour supprimer l'image
+    );
+
+    // Initialisation de l'upload pour l'image de background
+    handleBackgroundMediaFrame(
+        '.testimonial-background-image-selector', // Bouton pour ouvrir WP Media
+        '.testimonial-background-image-url', // Input caché pour l'URL
+        '.testimonial-background-image-preview', // Aperçu de l'image
+        '.testimonial-background-image-container', // Container de l'aperçu
+        '.testimonial-remove-background-image' // Bouton pour supprimer l'image
     );
 }

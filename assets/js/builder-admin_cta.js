@@ -117,13 +117,13 @@ function admin_cta_scripts($) {
     $(".cta-block").each(function () {
         const block = $(this);
 
-        const bgTypeSelect = block.find(".bg-type-select");
-        const bgImageField = block.find(".bg-image-field");
-        const bgImageInput = block.find(".bg-image-url");
-        const bgImageContainer = block.find(".bg-image-container");
-        const bgImagePreview = block.find(".bg-image-preview");
-        const imageSelectorButton = block.find(".image-selector-button");
-        const removeImageButton = block.find(".remove-bg-image");
+        const bgTypeSelect = block.find(".cta-bg-type-select");
+        const bgImageField = block.find(".cta-bg-image-field");
+        const bgImageInput = block.find(".cta-bg-image-url");
+        const bgImageContainer = block.find(".cta-bg-image-container");
+        const bgImagePreview = block.find(".cta-bg-image-preview");
+        const imageSelectorButton = block.find(".cta-image-selector-button");
+        const removeImageButton = block.find(".remove-cta-bg-image");
 
         // Basculer entre champs d'image et de couleur
         function toggleBackgroundFields() {
@@ -182,11 +182,32 @@ function admin_cta_scripts($) {
         bgTypeSelect.on("change", toggleBackgroundFields);
     });
 
-    /* Code pour l'upload d'image */
-    (function($) {
-        $(document).ready(function() {
-            // Gestion de l'ajout ou de la sélection d'une image
-            $(document).on('click', '.cta-block .image-selector-button', function(event) {
+(function ($) {
+    $(document).ready(function () {
+        // Fonction pour basculer les champs entre couleur et image
+        function toggleBackgroundFields(block) {
+            const bgType = block.find('.cta-bg-type-select').val();
+            const colorField = block.find('.cta-bg-color-field');
+            const imageField = block.find('.cta-bg-image-field');
+
+            if (bgType === 'image') {
+                colorField.addClass('hidden');
+                imageField.removeClass('hidden');
+            } else {
+                colorField.removeClass('hidden');
+                imageField.addClass('hidden');
+            }
+        }
+
+        // Gestion du changement de type de background
+        $(document).on('change', '.cta-bg-type-select', function () {
+            const block = $(this).closest('.cta-block');
+            toggleBackgroundFields(block);
+        });
+
+        // Fonction générique pour gérer les sélecteurs d'image
+        function handleMediaFrame(buttonClass, urlClass, previewClass, containerClass, removeButtonClass) {
+            $(document).on('click', buttonClass, function (event) {
                 event.preventDefault();
 
                 const button = $(this);
@@ -197,10 +218,10 @@ function admin_cta_scripts($) {
                     return;
                 }
 
-                const imageUrlInput = block.find('.bg-image-url');
-                const imagePreview = block.find('.bg-image-preview');
-                const imageContainer = block.find('.bg-image-container');
-                const removeImageButton = block.find('.remove-bg-image');
+                const imageUrlInput = block.find(urlClass);
+                const imagePreview = block.find(previewClass);
+                const imageContainer = block.find(containerClass);
+                const removeImageButton = block.find(removeButtonClass);
 
                 const mediaFrame = wp.media({
                     title: 'Choisir une image',
@@ -208,10 +229,8 @@ function admin_cta_scripts($) {
                     multiple: false,
                 });
 
-                mediaFrame.on('select', function() {
+                mediaFrame.on('select', function () {
                     const attachment = mediaFrame.state().get('selection').first().toJSON();
-                    console.log('Image sélectionnée :', attachment);
-
                     imageUrlInput.val(attachment.url);
                     imagePreview.attr('src', attachment.url);
                     imageContainer.removeClass('hidden');
@@ -221,52 +240,45 @@ function admin_cta_scripts($) {
                 mediaFrame.open();
             });
 
-            // Gestion du bouton "Supprimer l'image"
-            $(document).on('click', '.cta-block .remove-bg-image', function(event) {
+            // Gestion du bouton "Supprimer"
+            $(document).on('click', removeButtonClass, function (event) {
                 event.preventDefault();
 
                 const block = $(this).closest('.cta-block');
-                if (!block.length) {
-                    console.error('Bloc parent introuvable.');
-                    return;
-                }
-
-                const imageUrlInput = block.find('.bg-image-url');
-                const imagePreview = block.find('.bg-image-preview');
-                const imageContainer = block.find('.bg-image-container');
+                const imageUrlInput = block.find(urlClass);
+                const imagePreview = block.find(previewClass);
+                const imageContainer = block.find(containerClass);
 
                 imageUrlInput.val('');
                 imagePreview.attr('src', '');
                 imageContainer.addClass('hidden');
             });
+        }
 
-            // Fonction pour basculer entre couleur et image
-            function toggleBackgroundFields(block) {
-                const bgType = block.find('.bg-type-select').val();
-                const colorField = block.find('.bg-color-field');
-                const imageField = block.find('.bg-image-field');
+        // Initialisation pour chaque champ d'image
+        handleMediaFrame(
+            '.cta-inner-image-selector',
+            '.cta-inner-image-url',
+            '.cta-inner-image-preview',
+            '.cta-inner-image-container',
+            '.remove-cta-inner-image'
+        );
 
-                if (bgType === 'image') {
-                    colorField.addClass('hidden');
-                    imageField.removeClass('hidden');
-                } else {
-                    colorField.removeClass('hidden');
-                    imageField.addClass('hidden');
-                }
-            }
+        handleMediaFrame(
+            '.cta-bg-image-selector',
+            '.cta-bg-image-url',
+            '.cta-bg-image-preview',
+            '.cta-bg-image-container',
+            '.remove-cta-bg-image'
+        );
 
-            // Gestion des changements de type de background
-            $(document).on('change', '.cta-block .bg-type-select', function() {
-                const block = $(this).closest('.cta-block');
-                toggleBackgroundFields(block);
-            });
-
-            // Initialisation des champs
-            $('.cta-block').each(function() {
-                toggleBackgroundFields($(this));
-            });
+        // Initialisation des champs au chargement
+        $('.cta-block').each(function () {
+            const block = $(this);
+            toggleBackgroundFields(block);
         });
-    })(jQuery);
+    });
+})(jQuery);
 
 
 }

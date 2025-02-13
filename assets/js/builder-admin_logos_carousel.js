@@ -51,7 +51,7 @@
                     } else {
                         // Gestion d'une seule image (si nécessaire)
                         const attachment = selection.first().toJSON();
-                        container.html(`
+                        container.html(` 
                             <div class="relative lc-logo-item">
                                 <img src="${attachment.url}" alt="Logo" class="max-w-full h-auto">
                                 <button type="button" class="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full lc-remove-logo">
@@ -97,5 +97,30 @@
             block.find(".lc_bg_color_field").toggleClass("hidden", bgType !== "color");
             block.find(".lc_bg_image_field").toggleClass("hidden", bgType !== "image");
         });
+         
+        // Vérification du nombre minimum de logos avant soumission
+        $(document).on("submit", "#post", function (event) {
+            // Par défaut, il y a un block qui sert de modele dans l'architecture HTML, 
+            // donc meme si on n'ajute pas de block logo, il y en a au moins un dans la structure HTML
+            if ($('.client-carousel-block').length > 1) {   
+                const logosCount = $(".lc-logos-container .lc-logo-item").length;
+
+                if (logosCount < 5) {
+                    event.preventDefault(); // Empêcher la soumission
+                    alert(
+                        "Vous devez sélectionner au moins 5 images pour valider le carousel des logos."
+                    );
+                    // Réinitialiser le bouton de soumission
+                    const submitButton = $("#publish");
+                    submitButton.removeClass("disabled"); // Supprimer les classes de désactivation
+                    submitButton.removeClass("button-disabled"); // Supprimer les classes de désactivation
+                    submitButton.val("Publier"); // Réinitialiser le texte (facultatif)
+                    $('#publishing-action .spinner').removeClass('is-active');
+
+                    return false;
+                }
+            }
+        });
+
     });
 })(jQuery);

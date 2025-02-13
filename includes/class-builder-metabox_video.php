@@ -18,6 +18,14 @@ class Video_Block {
                     ?>
                 </select>
             </p>
+
+            <!-- ID du block -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][block_id]" value="<?php echo esc_attr($data['block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>
+
             <p class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Titre de la vidéo :</label>
                 <input type="text" name="builder_blocks[<?php echo $index; ?>][data][title]" value="<?php echo esc_attr($data['title'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
@@ -56,6 +64,7 @@ class Video_Block {
 
     public function sanitize($data, $post_id, $index) {
         return array(
+            'block_id' => isset($data['block_id']) ? sanitize_title($data['block_id']) : '',  
             'url' => isset($data['url']) ? esc_url_raw($data['url']) : '',
             'title_tag' => isset($data['title_tag']) ? sanitize_text_field($data['title_tag']) : 'h3',
             'title' => isset($data['title']) ? sanitize_text_field($data['title']) : '',

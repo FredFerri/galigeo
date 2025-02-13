@@ -13,7 +13,7 @@ function admin_text_block_scripts($, builderContainer) {
                 const buttonsContainer = $(`#text-buttons-container-${blockIndex}`);
 
                 // Compte le nombre de boutons existants dans ce bloc pour déterminer l'index du prochain bouton
-                const buttonCount = buttonsContainer.children('.button-fields').length;
+                const buttonCount = buttonsContainer.children('.text-button-fields').length;
 
                 // Récupère le template HTML du bouton et remplace les placeholders
                 let templateHtml = $(`#text-button-template-${blockIndex}`).html()
@@ -24,7 +24,7 @@ function admin_text_block_scripts($, builderContainer) {
                 buttonsContainer.append(templateHtml);
 
                 // Mettre à jour les attributs ID, name et le titre des nouveaux champs
-                buttonsContainer.children('.button-fields').each(function (index) {
+                buttonsContainer.children('.text-button-fields').each(function (index) {
                     $(this).find('input, select, textarea').each(function () {
                         const name = $(this).attr('name');
                         if (name) {
@@ -44,14 +44,14 @@ function admin_text_block_scripts($, builderContainer) {
             });
 
             // Gérer la suppression de bouton
-            $(document).on('click', '.remove-button', function (e) {
+            $(document).on('click', '.text-remove-button', function (e) {
                 e.preventDefault();
-                $(this).closest('.button-fields').remove();
+                $(this).closest('.text-button-fields').remove();
 
                 // Mettre à jour les index des boutons après suppression
                 const blockIndex = $(this).closest('.builder-block').data('index');
                 const buttonsContainer = $(`#text-buttons-container-${blockIndex}`);
-                buttonsContainer.children('.button-fields').each(function (index) {
+                buttonsContainer.children('.text-button-fields').each(function (index) {
                     // Mettre à jour l'index de chaque bouton
                     $(this).find('input, select, textarea').each(function () {
                         const name = $(this).attr('name');
@@ -75,7 +75,7 @@ function admin_text_block_scripts($, builderContainer) {
 
 
     function updateButtonIndexes(container) {
-        container.children('.button-fields').each(function(index) {
+        container.children('.text-button-fields').each(function(index) {
             $(this).find('.button-number').text(index + 1);
             $(this).find('input, select').each(function() {
                 const name = $(this).attr('name');
@@ -103,12 +103,12 @@ function admin_text_block_scripts($, builderContainer) {
 
 
     // Gestion du type de background pour le block texte
-    builderContainer.on('change', '.bg-type-select', function() {
-        const bgType = $(this).val();
-        const block = $(this).closest('.builder-block');
-        block.find('.bg-color-field').toggle(bgType === 'color');
-        block.find('.bg-image-field').toggle(bgType === 'image');
-    });
+    // builderContainer.on('change', '.text-bg-type-select', function() {
+    //     const bgType = $(this).val();
+    //     const block = $(this).closest('.builder-block');
+    //     block.find('.bg-color-field').toggle(bgType === 'color');
+    //     block.find('.bg-image-field').toggle(bgType === 'image');
+    // });
 
 }
 

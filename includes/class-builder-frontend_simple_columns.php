@@ -3,6 +3,7 @@ class Simple_Columns_Block_Frontend {
     public function render($data) {
         // Commence le container principal
         $output = '<div class="galigeo-columns-block mx-auto my-12 px-4 flex justify-between">';
+        $output .= '<div class="galigeo-columns-subblock flex justify-between">';
         
         // Parcours chaque colonne
         foreach ($data['columns'] as $column) {
@@ -30,7 +31,7 @@ class Simple_Columns_Block_Frontend {
 
             // Affichage de la description
             if (!empty($column['description'])) {
-                $output .= '<p class="galigeo-column-desc text-lg">' . wp_kses_post($column['description']) . '</p>';
+                $output .= '<p style="font-size:1.2rem; color: gray;" class="galigeo-column-desc">' . wp_kses_post($column['description']) . '</p>';
             }
 
             // Fermeture du bloc de la colonne
@@ -38,7 +39,7 @@ class Simple_Columns_Block_Frontend {
         }
 
         // Fermeture du container principal
-        $output .= '</div>';
+        $output .= '</div></div>';
         return $output;
     }
 }

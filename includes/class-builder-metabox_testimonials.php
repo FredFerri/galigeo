@@ -3,6 +3,24 @@ class Testimonials_Block {
     public function render($data, $index) {
         ?>
         <div class="testimonials-block bg-white shadow-md rounded-lg p-6 mb-6">
+            <!-- Image de background -->
+            <div class="mb-6 testimonials-top">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Image de background :</label>
+                <button type="button" class="testimonial-background-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo $index; ?>][data][background_image]" value="<?php echo esc_url($data['background_image'] ?? ''); ?>" class="testimonial-background-image-url">
+                <div class="testimonial-background-image-container <?php echo empty($data['background_image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo !empty($data['background_image']) ? esc_url($data['background_image']) : ''; ?>" alt="Image de background" class="testimonial-background-image-preview max-w-xs">
+                    <button type="button" class="testimonial-remove-background-image bg-red-500 text-white p-1 rounded-full">&times;</button>
+                </div>
+            </div>
+
+            <!-- ID du block -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID du block :</label>
+                <input type="text" name="builder_blocks[<?php echo $index; ?>][data][block_id]" value="<?php echo esc_attr($data['block_id'] ?? ''); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <p class="text-sm text-gray-500 mt-1">Entrez un identifiant unique pour ce block (lettres, chiffres, tirets uniquement).</p>
+            </div>            
+
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4">Configuration des Témoignages</h3>
                 <div class="testimonials-slides">
@@ -51,11 +69,11 @@ class Testimonials_Block {
             <!-- Image -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Image :</label>
-                <button type="button" class="extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
-                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][testimonials][<?php echo esc_attr($testimonial_index); ?>][image]" value="<?php echo esc_url($testimonial_data['image'] ?? ''); ?>" class="extra-image-url">
-                <div class="extra-image-container <?php echo empty($testimonial_data['image']) ? 'hidden' : ''; ?>">
-                    <img src="<?php echo esc_url($testimonial_data['image']); ?>" alt="Image actuelle" class="extra-image-preview max-w-xs">
-                    <button type="button" class="remove-extra-image bg-red-500 text-white p-1 rounded-full">&times;</button>
+                <button type="button" class="testimonial-extra-image-selector bg-blue-500 text-white py-2 px-4 rounded mb-2">Ajouter ou sélectionner une image</button>
+                <input type="hidden" name="builder_blocks[<?php echo esc_attr($block_index); ?>][data][testimonials][<?php echo esc_attr($testimonial_index); ?>][image]" value="<?php echo esc_url($testimonial_data['image'] ?? ''); ?>" class="testimonial-extra-image-url">
+                <div class="testimonial-extra-image-container <?php echo empty($testimonial_data['image']) ? 'hidden' : ''; ?>">
+                    <img src="<?php echo !empty($testimonial_data['image']) ? esc_url($testimonial_data['image']) : ''; ?>" alt="Image actuelle" class="testimonial-extra-image-preview max-w-xs">
+                    <button type="button" class="testimonial-remove-extra-image bg-red-500 text-white p-1 rounded-full">&times;</button>
                 </div>
             </div>
 
@@ -69,6 +87,16 @@ class Testimonials_Block {
 
     public function sanitize($data, $post_id, $index) {
         $sanitized_data = [];
+
+        // Image de background
+        if (!empty($data['block_id'])) {
+            $sanitized_data['block_id'] = $data['block_id'];
+        }
+
+        // Image de background
+        if (!empty($data['background_image'])) {
+            $sanitized_data['background_image'] = esc_url_raw($data['background_image']);
+        }
 
         if (isset($data['testimonials']) && is_array($data['testimonials'])) {
             foreach ($data['testimonials'] as $testimonial_index => $testimonial_data) {
@@ -98,7 +126,7 @@ class Testimonials_Block {
         $uploaded_file = wp_handle_upload($file, $upload_overrides);
 
         if ($uploaded_file && !isset($uploaded_file['error'])) {
-            $file_name = basename($file['name']);
+            $file_name = basename($uploaded_file['file']);
             $file_type = wp_check_filetype($file_name);
 
             $attachment_data = array(
@@ -123,5 +151,4 @@ class Testimonials_Block {
 
         return false;
     }
-
 }
